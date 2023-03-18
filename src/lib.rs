@@ -107,7 +107,7 @@ impl Plugin for SynthTwo {
         buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
     ) -> bool {
-        self.synth.set_sample_rate(buffer_config.sample_rate);
+        self.synth.set_sample_rate(buffer_config.sample_rate.into());
 
         // Resize buffers and perform other potentially expensive initialization operations here.
         // The `reset()` function is always called right after this function. You can remove this
@@ -130,7 +130,7 @@ impl Plugin for SynthTwo {
         let mut next_event = context.next_event();
 
         // interesting to do this here rather than inside the synth stuff
-        for (_sample_index, channel_samples) in buffer.iter_samples().enumerate() {
+        for channel_samples in buffer.iter_samples() {
             // process midi events
             while let Some(event) = next_event {
 
@@ -146,15 +146,12 @@ impl Plugin for SynthTwo {
                 next_event = context.next_event();
             }
 
-            // track the time per note. probably don't need sample_index
-            // except if there is an lfo with period > buffer len...
-            // worry about that later
-
             // Smoothing is optionally built into the parameters themselves
             let gain = self.params.gain.smoothed.next();
 
             for sample in channel_samples {
-                *sample *= gain;
+                // why is buffer f32?
+                *sample = self.synth.process_sample() as f32 * gain;
             }
             
 
