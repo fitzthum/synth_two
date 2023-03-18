@@ -1,10 +1,6 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
 
-// This is a shortened version of the gain example with most comments removed, check out
-// https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs to get
-// started
-
 struct SynthTwo {
     params: Arc<SynthTwoParams>,
 }
@@ -68,7 +64,7 @@ impl Plugin for SynthTwo {
     // The first audio IO layout is used as the default. The other layouts may be selected either
     // explicitly or automatically by the host or the user depending on the plugin API/backend.
     const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[AudioIOLayout {
-        main_input_channels: NonZeroU32::new(2),
+        main_input_channels: NonZeroU32::new(0),
         main_output_channels: NonZeroU32::new(2),
 
         aux_input_ports: &[],
@@ -81,7 +77,7 @@ impl Plugin for SynthTwo {
     }];
 
 
-    const MIDI_INPUT: MidiConfig = MidiConfig::None;
+    const MIDI_INPUT: MidiConfig = MidiConfig::Basic;
     const MIDI_OUTPUT: MidiConfig = MidiConfig::None;
 
     const SAMPLE_ACCURATE_AUTOMATION: bool = true;
@@ -135,22 +131,15 @@ impl Plugin for SynthTwo {
     }
 }
 
-impl ClapPlugin for SynthTwo {
-    const CLAP_ID: &'static str = "com.your-domain.synth-two";
-    const CLAP_DESCRIPTION: Option<&'static str> = Some("A short description of your plugin");
-    const CLAP_MANUAL_URL: Option<&'static str> = Some(Self::URL);
-    const CLAP_SUPPORT_URL: Option<&'static str> = None;
-
-    // Don't forget to change these features
-    const CLAP_FEATURES: &'static [ClapFeature] = &[ClapFeature::AudioEffect, ClapFeature::Stereo];
-}
-
 impl Vst3Plugin for SynthTwo {
     const VST3_CLASS_ID: [u8; 16] = *b"Synth22222222222";
 
     // And also don't forget to change these categories
-    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] =
-        &[Vst3SubCategory::Fx, Vst3SubCategory::Dynamics];
+    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] = &[
+        Vst3SubCategory::Instrument,
+        Vst3SubCategory::Synth,
+        Vst3SubCategory::Stereo,
+    ];
 }
 
 nih_export_vst3!(SynthTwo);
