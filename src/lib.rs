@@ -37,13 +37,13 @@ impl Default for SynthTwoParams {
             // as decibels is easier to work with, but requires a conversion for every sample.
             gain: FloatParam::new(
                 "Gain",
-                util::db_to_gain(0.0),
+                util::db_to_gain(-12.0),
                 FloatRange::Skewed {
-                    min: util::db_to_gain(-30.0),
-                    max: util::db_to_gain(30.0),
+                    min: util::db_to_gain(-36.0),
+                    max: util::db_to_gain(0.0),
                     // This makes the range appear as if it was linear when displaying the values as
                     // decibels
-                    factor: FloatRange::gain_skew_factor(-30.0, 30.0),
+                    factor: FloatRange::gain_skew_factor(-36.0, 0.0),
                 },
             )
             // Because the gain parameter is stored as linear gain instead of storing the value as
