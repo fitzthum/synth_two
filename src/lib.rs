@@ -108,17 +108,42 @@ impl Plugin for SynthTwo {
     }
 
     fn reset(&mut self) {
-        // Reset buffers and envelopes here. This can be called from the audio thread and may not
-        // allocate. You can remove this function if you do not need it.
+        // Nothing yet
     }
 
     fn process(
         &mut self,
         buffer: &mut Buffer,
         _aux: &mut AuxiliaryBuffers,
-        _context: &mut impl ProcessContext<Self>,
+        context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
-        for channel_samples in buffer.iter_samples() {
+
+        // with vst3/nih we handle the midi events and audio processing both in this function
+        let mut next_event = context.next_event();
+
+        // interesting to do this here rather than inside the synth stuff
+        for (_sample_index, channel_samples) in buffer.iter_samples().enumerate() {
+            // process midi events
+            while let Some(event) = next_event {
+
+                match event {
+                    NoteEvent::NoteOn { note, velocity, .. } => {
+                        // TODO: create new voice
+                        ()
+                    },
+                    NoteEvent::NoteOff { note, .. } => {
+                        // TODO: turn off voice
+                        ()
+                    },
+                    _ => (),
+                }
+                next_event = context.next_event();
+            }
+
+            // track the time per note. probably don't need sample_index
+            // except if there is an lfo with period > buffer len...
+            // worry about that later
+
             // Smoothing is optionally built into the parameters themselves
             let gain = self.params.gain.smoothed.next();
 
