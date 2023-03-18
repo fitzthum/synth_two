@@ -1,13 +1,12 @@
-
 use std::f64::consts::PI;
 
 // Time from note on to sample being processed
 pub trait Oscillator {
     // different oscillators will have different init logic
-	// so don't define anything here
+    // so don't define anything here
 
-	// an oscillator is always linked to a voice, 
-	// so the frequency can't be adjusted between samples
+    // an oscillator is always linked to a voice,
+    // so the frequency can't be adjusted between samples
     fn process(&self, time: f64) -> f64;
 }
 
