@@ -1,12 +1,18 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
+use nih_plug_iced::IcedState;
 
 mod synth;
 use synth::Synth;
 
+mod editor;
+
 struct SynthTwo {
     params: Arc<SynthTwoParams>,
-    // not sure an option is optimal here
+    // sample code says to put this in the params
+    // so that the gui state can be restored automatically
+    // but I don't really want to do that 
+    editor_state: Arc<IcedState>,
     synth: Synth,
 }
 
@@ -34,6 +40,7 @@ impl Default for SynthTwo {
     fn default() -> Self {
         Self {
             params: Arc::new(SynthTwoParams::default()),
+            editor_state: editor::default_state(),
             synth: Synth::default(),
         }
     }
@@ -147,12 +154,20 @@ impl Plugin for SynthTwo {
         self.params.clone()
     }
 
+
+    fn editor(&self, _async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
+        editor::create(
+            self.params.clone(),
+            self.editor_state.clone(),
+            )
+    }
+
     fn initialize(
         &mut self,
         _audio_io_layout: &AudioIOLayout,
         buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
-    ) -> bool {
+        ) -> bool {
         self.synth
             .initialize(self.params.clone(), buffer_config.sample_rate.into());
 
@@ -171,7 +186,7 @@ impl Plugin for SynthTwo {
         buffer: &mut Buffer,
         _aux: &mut AuxiliaryBuffers,
         context: &mut impl ProcessContext<Self>,
-    ) -> ProcessStatus {
+        ) -> ProcessStatus {
         // with vst3/nih we handle the midi events and audio processing both in this function
         let mut next_event = context.next_event();
 
