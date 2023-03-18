@@ -1,8 +1,13 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
 
+mod synth;
+use synth::Synth;
+
 struct SynthTwo {
     params: Arc<SynthTwoParams>,
+    // not sure an option is optimal here
+    synth: Synth,
 }
 
 #[derive(Params)]
@@ -19,6 +24,7 @@ impl Default for SynthTwo {
     fn default() -> Self {
         Self {
             params: Arc::new(SynthTwoParams::default()),
+            synth: Synth::default(),
         }
     }
 }
@@ -98,9 +104,11 @@ impl Plugin for SynthTwo {
     fn initialize(
         &mut self,
         _audio_io_layout: &AudioIOLayout,
-        _buffer_config: &BufferConfig,
+        buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
     ) -> bool {
+        self.synth.set_sample_rate(buffer_config.sample_rate);
+
         // Resize buffers and perform other potentially expensive initialization operations here.
         // The `reset()` function is always called right after this function. You can remove this
         // function if you do not need it.
@@ -128,12 +136,10 @@ impl Plugin for SynthTwo {
 
                 match event {
                     NoteEvent::NoteOn { note, velocity, .. } => {
-                        // TODO: create new voice
-                        ()
+                        self.synth.voice_on(note, velocity);
                     },
                     NoteEvent::NoteOff { note, .. } => {
-                        // TODO: turn off voice
-                        ()
+                        self.synth.voice_off(note);
                     },
                     _ => (),
                 }
@@ -150,6 +156,10 @@ impl Plugin for SynthTwo {
             for sample in channel_samples {
                 *sample *= gain;
             }
+            
+
+            // clear out unused voices
+            self.synth.reap_voices();
         }
 
         ProcessStatus::Normal
