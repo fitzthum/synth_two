@@ -39,6 +39,14 @@ pub struct SynthTwoParams {
     #[id = "wave-index-1"]
     pub wave_index_1: FloatParam,
 
+    #[id = "wave-index-2"]
+    pub wave_index_2: FloatParam,
+
+    #[id = "oscillator-balance"]
+    pub oscillator_balance: FloatParam,
+
+
+
 }
 
 impl Default for SynthTwo {
@@ -92,6 +100,15 @@ impl Default for SynthTwoParams {
             // Wave Index Oscillator One
             wave_index_1: FloatParam::new("Wave Index One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            // Wave Index Oscillator Two
+            wave_index_2: FloatParam::new("Wave Index One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            // Oscillator Balance
+            oscillator_balance: FloatParam::new("Oscillator Balance", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
 
         }
     }
