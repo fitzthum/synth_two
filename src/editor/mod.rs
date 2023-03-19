@@ -22,6 +22,10 @@ struct SynthTwoEditor {
     context: Arc<dyn GuiContext>,
 
     gain_slider_state: nih_widgets::param_slider::State,
+    attack_slider_state: nih_widgets::param_slider::State,
+    decay_slider_state: nih_widgets::param_slider::State,
+    sustain_slider_state: nih_widgets::param_slider::State,
+    release_slider_state: nih_widgets::param_slider::State,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -44,6 +48,10 @@ impl IcedEditor for SynthTwoEditor {
             context,
 
             gain_slider_state: Default::default(),
+            attack_slider_state: Default::default(),
+            decay_slider_state: Default::default(),
+            sustain_slider_state: Default::default(),
+            release_slider_state: Default::default(),
         };
 
         (editor, Command::none())
@@ -67,8 +75,8 @@ impl IcedEditor for SynthTwoEditor {
 
     fn view(&mut self) -> Element<'_, Self::Message> {
         Container::new(
-            Column::new().push(Space::with_height(20.into())).push(
-                Row::new()
+            Column::new().push(Space::with_height(20.into()))
+                .push(Row::new()
                     .align_items(Alignment::Start)
                     .push(Space::with_width(20.into()))
                     .push(
@@ -86,7 +94,88 @@ impl IcedEditor for SynthTwoEditor {
                         )
                         .map(Message::ParamUpdate),
                     ),
-            ),
+            )
+                .push(Space::with_height(10.into()))
+                .push(Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Attack")
+                            .height(27.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.attack_slider_state,
+                            &self.params.attack,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            )
+                .push(Space::with_height(10.into()))
+                .push(Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Decay")
+                            .height(27.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.decay_slider_state,
+                            &self.params.decay,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            )
+                .push(Space::with_height(10.into()))
+                .push(Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Sustain")
+                            .height(27.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.sustain_slider_state,
+                            &self.params.sustain,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            )
+                .push(Space::with_height(10.into()))
+                .push(Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Release")
+                            .height(27.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.release_slider_state,
+                            &self.params.release,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            )
+
         )
         .height(Length::Fill)
         .into()

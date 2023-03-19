@@ -75,7 +75,7 @@ impl Default for SynthTwoParams {
             // Sustain
             sustain: FloatParam::new("Sustain", 0.0, FloatRange::Linear { min: 0.0, max: 1.0 })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
-                .with_unit(" percet"),
+                .with_unit(" percent"),
 
             // Release
             release: FloatParam::new("Release", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
