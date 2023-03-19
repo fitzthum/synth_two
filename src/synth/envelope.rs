@@ -12,20 +12,27 @@ pub struct ADSR {
     decay: f64,
     sustain: f64,
     release: f64,
-    max_alpha: f64,
+    release_alpha: f64,
     pub finished: bool,
 }
 
 impl ADSR {
-    pub fn new(attack: f32, decay: f32, sustain: f32, release: f32) -> Self {
+    pub fn default() -> Self {
         ADSR {
-            attack: attack.into(),
-            decay: decay.into(),
-            sustain: sustain.into(),
-            release: release.into(),
-            max_alpha: 1.0,
+            attack: 0.0, 
+            decay: 0.0,
+            sustain: 0.0, 
+            release:  0.0,
+            release_alpha: 0.0,
             finished: false,
         }
+    }
+
+    pub fn update(&mut self, attack: f32, decay: f32, sustain: f32, release: f32) {
+        self.attack = attack.into();
+        self.decay = decay.into();
+        self.sustain = sustain.into();
+        self.release = release.into();
     }
 }
 
@@ -36,20 +43,21 @@ impl Envelope for ADSR {
         if time_off == 0.0 {
             if time < self.attack {
                 alpha = time * (1.0 / self.attack);
-                self.max_alpha = alpha;
             } else if time < self.attack + self.decay {
+                // this will always be from 1, since we have passed the full attack time
                 alpha = 1.0 - (time - self.attack) * ((1.0 - self.sustain) / self.decay);
             } else {
                 alpha = self.sustain;
             }
+            self.release_alpha = alpha;
         } else {
             // if the key is released before the sustain level has been reached,
             // we should release from the max_alpha, not from the sustain level.
-            let sustain = f64::min(self.max_alpha, self.sustain);
+            let sustain = self.release_alpha;
 
             let time_since_off = time - time_off;
             if time_since_off < self.release {
-                alpha = sustain - (time_since_off * (self.sustain / self.release))
+                alpha = sustain - (time_since_off * (sustain / self.release))
             } else {
                 self.finished = true;
             }

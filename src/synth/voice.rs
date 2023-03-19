@@ -28,6 +28,7 @@ pub struct Voice {
 
     // all the components for this voice
     oscillator: SineOscillator,
+    envelope: ADSR,
 }
 
 impl Voice {
@@ -47,14 +48,13 @@ impl Voice {
             time_per_sample,
             plugin_params,
             oscillator: SineOscillator::new(frequency),
+            envelope: ADSR::default(),
         }
     }
 
     pub fn voice_off(&mut self) {
         self.time_off = self.time_since_on;
 
-        // change this once we have envelopes
-        self.finished = true;
     }
 
     pub fn process(&mut self) -> f64 {
@@ -64,15 +64,15 @@ impl Voice {
     }
 
     fn envelope(&mut self) -> f64 {
-        let mut env = ADSR::new(
+        self.envelope.update(
             self.plugin_params.attack.smoothed.next(),
             self.plugin_params.decay.smoothed.next(),
             self.plugin_params.sustain.smoothed.next(),
             self.plugin_params.release.smoothed.next(),
         );
 
-        let out = env.process(self.time_since_on, self.time_off);
-        self.finished = env.finished;
+        let out = self.envelope.process(self.time_since_on, self.time_off);
+        self.finished = self.envelope.finished;
 
         out
     }
