@@ -73,7 +73,7 @@ impl IcedEditor for SynthTwoEditor {
                     .push(Space::with_width(20.into()))
                     .push(
                         Text::new("Gain")
-                            .height(26.into())
+                            .height(27.into())
                             .width(Length::Shrink)
                             .horizontal_alignment(alignment::Horizontal::Left)
                             .vertical_alignment(alignment::Vertical::Center),

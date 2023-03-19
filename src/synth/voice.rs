@@ -60,11 +60,7 @@ impl Voice {
     pub fn process(&mut self) -> f64 {
         let out = self.oscillator.process(self.time_since_on);
         self.time_since_on += self.time_per_sample;
-        out * self.envelope() * self.velocity_amp()
-    }
-
-    fn velocity_amp(&self) -> f64 {
-        self.velocity as f64 / 127.0
+        out * self.envelope() * self.velocity as f64
     }
 
     fn envelope(&mut self) -> f64 {
