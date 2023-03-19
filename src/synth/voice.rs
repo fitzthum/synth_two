@@ -2,7 +2,7 @@
 use std::sync::Arc;
 
 use crate::synth::envelope::{Envelope, ADSR};
-use crate::synth::oscillator::{Oscillator, SineOscillator};
+use crate::synth::oscillator::{Oscillator, SineOscillator, WaveTableOscillator};
 use crate::SynthTwoParams;
 
 fn midi_note_to_freq(note: u8) -> f64 {
@@ -27,7 +27,7 @@ pub struct Voice {
     plugin_params: Arc<SynthTwoParams>,
 
     // all the components for this voice
-    oscillator: SineOscillator,
+    oscillator: WaveTableOscillator,
     envelope: ADSR,
 }
 
@@ -47,7 +47,7 @@ impl Voice {
             finished: false,
             time_per_sample,
             plugin_params,
-            oscillator: SineOscillator::new(frequency),
+            oscillator: WaveTableOscillator::new(frequency, time_per_sample, 0.5),
             envelope: ADSR::default(),
         }
     }

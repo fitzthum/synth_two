@@ -2,6 +2,9 @@ use nih_plug::prelude::*;
 use nih_plug_iced::IcedState;
 use std::sync::Arc;
 
+#[macro_use]
+extern crate lazy_static;
+
 mod synth;
 use synth::Synth;
 
