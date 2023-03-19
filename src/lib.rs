@@ -35,6 +35,10 @@ pub struct SynthTwoParams {
 
     #[id = "release"]
     pub release: FloatParam,
+
+    #[id = "wave-index-1"]
+    pub wave_index_1: FloatParam,
+
 }
 
 impl Default for SynthTwo {
@@ -66,7 +70,7 @@ impl Default for SynthTwoParams {
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
 
             // Attack
-            attack: FloatParam::new("Attack", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+            attack: FloatParam::new("Attack", 0.01, FloatRange::Linear { min: 0.0, max: 5.0 })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" seconds"),
 
@@ -76,14 +80,19 @@ impl Default for SynthTwoParams {
                 .with_unit(" seconds"),
 
             // Sustain
-            sustain: FloatParam::new("Sustain", 0.0, FloatRange::Linear { min: 0.0, max: 1.0 })
+            sustain: FloatParam::new("Sustain", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" percent"),
 
             // Release
-            release: FloatParam::new("Release", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+            release: FloatParam::new("Release", 0.01, FloatRange::Linear { min: 0.0, max: 5.0 })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" seconds"),
+
+            // Wave Index Oscillator One
+            wave_index_1: FloatParam::new("Wave Index One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
         }
     }
 }

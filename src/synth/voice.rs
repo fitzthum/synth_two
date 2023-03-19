@@ -39,6 +39,7 @@ impl Voice {
         plugin_params: Arc<SynthTwoParams>,
     ) -> Self {
         let frequency = midi_note_to_freq(note);
+        let wave_index_1 = plugin_params.wave_index_1.value();
 
         Self {
             velocity,
@@ -47,7 +48,7 @@ impl Voice {
             finished: false,
             time_per_sample,
             plugin_params,
-            oscillator: WaveTableOscillator::new(frequency, time_per_sample, 0.5),
+            oscillator: WaveTableOscillator::new(frequency, time_per_sample, wave_index_1.into()),
             envelope: ADSR::default(),
         }
     }
