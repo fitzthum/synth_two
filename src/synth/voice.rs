@@ -60,7 +60,6 @@ impl Voice {
 
     pub fn voice_off(&mut self) {
         self.time_off = self.time_since_on;
-
     }
 
     pub fn process(&mut self) -> f64 {
@@ -80,7 +79,7 @@ impl Voice {
 
         let balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
         let ob = (o1 * balance) + (o2 * (1.0 - balance));
-            
+
         self.time_since_on += self.time_per_sample;
         ob * self.main_envelope() * self.velocity as f64
     }
@@ -93,7 +92,8 @@ impl Voice {
             self.plugin_params.warp_release_1.smoothed.next(),
         );
 
-        self.warp_envelope_1.process(self.time_since_on, self.time_off)
+        self.warp_envelope_1
+            .process(self.time_since_on, self.time_off)
     }
 
     fn warp_envelope_2(&mut self) -> f64 {
@@ -104,9 +104,9 @@ impl Voice {
             self.plugin_params.warp_release_2.smoothed.next(),
         );
 
-        self.warp_envelope_2.process(self.time_since_on, self.time_off)
+        self.warp_envelope_2
+            .process(self.time_since_on, self.time_off)
     }
-
 
     fn main_envelope(&mut self) -> f64 {
         self.main_envelope.update(
@@ -116,7 +116,9 @@ impl Voice {
             self.plugin_params.release.smoothed.next(),
         );
 
-        let out = self.main_envelope.process(self.time_since_on, self.time_off);
+        let out = self
+            .main_envelope
+            .process(self.time_since_on, self.time_off);
         self.finished = self.main_envelope.finished;
 
         out

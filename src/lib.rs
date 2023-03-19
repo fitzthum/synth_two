@@ -55,7 +55,6 @@ pub struct SynthTwoParams {
     #[id = "warp-release-1"]
     pub warp_release_1: FloatParam,
 
-
     // All the warp parameters for the second OSC
     #[id = "wave-index-2"]
     pub wave_index_2: FloatParam,
@@ -75,10 +74,8 @@ pub struct SynthTwoParams {
     #[id = "warp-release-2"]
     pub warp_release_2: FloatParam,
 
-
     #[id = "oscillator-balance"]
     pub oscillator_balance: FloatParam,
-
 }
 
 impl Default for SynthTwo {
@@ -130,52 +127,105 @@ impl Default for SynthTwoParams {
                 .with_unit(" seconds"),
 
             // Wave warp stuff or first oscillator
-            wave_index_1: FloatParam::new("Wave Index One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            wave_index_1: FloatParam::new(
+                "Wave Index One",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             // this time we can scale this here rather than arithmetically later
-            wave_warp_1: FloatParam::new("Wave Warp One", 0.0, FloatRange::Linear { min: -1.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            wave_warp_1: FloatParam::new(
+                "Wave Warp One",
+                0.0,
+                FloatRange::Linear {
+                    min: -1.0,
+                    max: 1.0,
+                },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_attack_1: FloatParam::new("Warp Attack One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_attack_1: FloatParam::new(
+                "Warp Attack One",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_decay_1: FloatParam::new("Warp Decay One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_decay_1: FloatParam::new(
+                "Warp Decay One",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_sustain_1: FloatParam::new("Warp Sustain One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_sustain_1: FloatParam::new(
+                "Warp Sustain One",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_release_1: FloatParam::new("Warp Release One", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
-
-
+            warp_release_1: FloatParam::new(
+                "Warp Release One",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             // Wave warp stuff for second oscillator
-            wave_index_2: FloatParam::new("Wave Index Two", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            wave_index_2: FloatParam::new(
+                "Wave Index Two",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            wave_warp_2: FloatParam::new("Wave Warp Two", 0.0, FloatRange::Linear { min: -1.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            wave_warp_2: FloatParam::new(
+                "Wave Warp Two",
+                0.0,
+                FloatRange::Linear {
+                    min: -1.0,
+                    max: 1.0,
+                },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_attack_2: FloatParam::new("Warp Attack Two", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_attack_2: FloatParam::new(
+                "Warp Attack Two",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_decay_2: FloatParam::new("Warp Decay Two", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_decay_2: FloatParam::new(
+                "Warp Decay Two",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_sustain_2: FloatParam::new("Warp Sustain Two", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            warp_sustain_2: FloatParam::new(
+                "Warp Sustain Two",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_release_2: FloatParam::new("Warp Release Two", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
-
+            warp_release_2: FloatParam::new(
+                "Warp Release Two",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             // Oscillator Balance
-            oscillator_balance: FloatParam::new("Oscillator Balance", 0.5, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0)),
-
-
+            oscillator_balance: FloatParam::new(
+                "Oscillator Balance",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
         }
     }
 }

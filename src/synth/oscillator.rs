@@ -1,6 +1,6 @@
-use std::f64::consts::PI;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
+use std::f64::consts::PI;
 
 const WAVE_TABLE_LENGTH: usize = 4096;
 
