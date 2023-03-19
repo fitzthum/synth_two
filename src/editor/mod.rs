@@ -21,11 +21,17 @@ struct SynthTwoEditor {
     params: Arc<SynthTwoParams>,
     context: Arc<dyn GuiContext>,
 
+    // overall gain
     gain_slider_state: nih_widgets::param_slider::State,
+
+    // ADSR
     attack_slider_state: nih_widgets::param_slider::State,
     decay_slider_state: nih_widgets::param_slider::State,
     sustain_slider_state: nih_widgets::param_slider::State,
     release_slider_state: nih_widgets::param_slider::State,
+
+    // wave index
+    wave_index_1_slider_state: nih_widgets::param_slider::State,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -52,6 +58,7 @@ impl IcedEditor for SynthTwoEditor {
             decay_slider_state: Default::default(),
             sustain_slider_state: Default::default(),
             release_slider_state: Default::default(),
+            wave_index_1_slider_state: Default::default(),
         };
 
         (editor, Command::none())
@@ -171,6 +178,26 @@ impl IcedEditor for SynthTwoEditor {
                         nih_widgets::ParamSlider::new(
                             &mut self.release_slider_state,
                             &self.params.release,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            )
+                .push(Space::with_height(10.into()))
+                .push(Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Wave Index One")
+                            .height(27.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.wave_index_1_slider_state,
+                            &self.params.wave_index_1,
                         )
                         .map(Message::ParamUpdate),
                     ),
