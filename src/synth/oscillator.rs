@@ -71,21 +71,40 @@ pub struct WaveTableOscillator {
     time_per_sample: f64,
     samples_per_cycle: f64,
     scale_factor: f64,
-    scaled_warp: f64,
-    wave_index_a: f64,
-    wave_index_b: f64,
+    wave_index: f64,
 }
 
 impl WaveTableOscillator {
-    pub fn new(frequency: f64, time_per_sample: f64, wave_warp: f64) -> Self {
+    pub fn new(frequency: f64, time_per_sample: f64) -> Self {
         let samples_per_cycle = (1.0 / time_per_sample) / frequency;
         let scale_factor = WAVE_TABLE_LENGTH as f64 / samples_per_cycle;
 
-        // wave_warp is a float between 0.0 and 1.0. We want to use this to
+        Self {
+            time_per_sample,
+            samples_per_cycle,
+            scale_factor,
+            wave_index: 0.5,
+        }
+    }
+
+    pub fn set_wave_index(&mut self, wave_index: f64) {
+        self.wave_index = wave_index;
+    }
+}
+
+impl Oscillator for WaveTableOscillator {
+    fn process(&self, time: f64) -> f64 {
+        let total_sample_offset = time / self.time_per_sample;
+        let unscaled_sample_offset = total_sample_offset % self.samples_per_cycle;
+
+        // hopefully the way we do the rounding won't land us out of bounds
+        let table_offset = unscaled_sample_offset * self.scale_factor;
+
+        // wave_index is a float between 0.0 and 1.0. We want to use this to
         // switch between N waves
         let mut wave_index_a = 0.0;
         let mut wave_index_b = 1.0;
-        let mut scaled_warp = wave_warp;
+        let mut scaled_warp = self.wave_index;
 
         let n_waves = WAVE_TABLE.waves.len();
         let wave_width = 1.0 / (n_waves - 1) as f64;
@@ -99,39 +118,20 @@ impl WaveTableOscillator {
                 let maybe_a_threshold = maybe_a * wave_width;
                 let maybe_b_threshold = maybe_b * wave_width;
 
-                if wave_warp <= maybe_b_threshold {
+                if self.wave_index <= maybe_b_threshold {
                     wave_index_a = maybe_a;
                     wave_index_b = maybe_b;
 
-                    scaled_warp = (wave_warp - maybe_a_threshold) / wave_width;
+                    scaled_warp = (self.wave_index - maybe_a_threshold) / wave_width;
                     break;
                 }
             }
         }
 
-        WaveTableOscillator {
-            time_per_sample,
-            samples_per_cycle,
-            scale_factor,
-            scaled_warp,
-            wave_index_a,
-            wave_index_b,
-        }
-    }
-}
-
-impl Oscillator for WaveTableOscillator {
-    fn process(&self, time: f64) -> f64 {
-        let total_sample_offset = time / self.time_per_sample;
-        let unscaled_sample_offset = total_sample_offset % self.samples_per_cycle;
-
-        // hopefully the way we do the rounding won't land us out of bounds
-        let table_offset = unscaled_sample_offset * self.scale_factor;
-
-        let sample_a = WAVE_TABLE.waves[self.wave_index_a as usize].samples[table_offset as usize];
-        let sample_b = WAVE_TABLE.waves[self.wave_index_b as usize].samples[table_offset as usize];
+        let sample_a = WAVE_TABLE.waves[wave_index_a as usize].samples[table_offset as usize];
+        let sample_b = WAVE_TABLE.waves[wave_index_b as usize].samples[table_offset as usize];
 
         let delta = sample_b - sample_a;
-        sample_a + delta * self.scaled_warp
+        sample_a + delta * scaled_warp
     }
 }

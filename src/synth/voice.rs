@@ -40,8 +40,6 @@ impl Voice {
         plugin_params: Arc<SynthTwoParams>,
     ) -> Self {
         let frequency = midi_note_to_freq(note);
-        let wave_index_1 = plugin_params.wave_index_1.value();
-        let wave_index_2 = plugin_params.wave_index_2.value();
 
         Self {
             velocity,
@@ -50,8 +48,8 @@ impl Voice {
             finished: false,
             time_per_sample,
             plugin_params,
-            oscillator1: WaveTableOscillator::new(frequency, time_per_sample, wave_index_1.into()),
-            oscillator2: WaveTableOscillator::new(frequency, time_per_sample, wave_index_2.into()),
+            oscillator1: WaveTableOscillator::new(frequency, time_per_sample),
+            oscillator2: WaveTableOscillator::new(frequency, time_per_sample),
             envelope: ADSR::default(),
         }
     }
@@ -62,8 +60,12 @@ impl Voice {
     }
 
     pub fn process(&mut self) -> f64 {
+        self.oscillator1.set_wave_index(self.plugin_params.wave_index_1.value().into());
         let o1 = self.oscillator1.process(self.time_since_on);
+
+        self.oscillator2.set_wave_index(self.plugin_params.wave_index_2.value().into());
         let o2 = self.oscillator2.process(self.time_since_on);
+
         let balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
         let ob = (o1 * balance) + (o2 * (1.0 - balance));
             

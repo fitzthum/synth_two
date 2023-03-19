@@ -45,8 +45,6 @@ pub struct SynthTwoParams {
     #[id = "oscillator-balance"]
     pub oscillator_balance: FloatParam,
 
-
-
 }
 
 impl Default for SynthTwo {
