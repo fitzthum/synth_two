@@ -29,10 +29,6 @@ impl Synth {
         self.plugin_params = plugin_params;
     }
 
-    pub fn set_sample_rate(&mut self, sample_rate: f64) {
-        self.sample_rate = sample_rate;
-    }
-
     // we're doing fake stereo at first
     pub fn process_sample(&mut self) -> f64 {
         let mut out = 0.0;

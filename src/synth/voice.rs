@@ -15,7 +15,6 @@ fn midi_note_to_freq(note: u8) -> f64 {
 pub struct Voice {
     // this represents the note
     // maybe it should be in a separate struct?
-    note: u8,
     velocity: f32,
     time_since_on: f64,
     time_off: f64,
@@ -41,7 +40,6 @@ impl Voice {
         let frequency = midi_note_to_freq(note);
 
         Self {
-            note,
             velocity,
             time_since_on: 0.0,
             time_off: 0.0,
@@ -62,7 +60,11 @@ impl Voice {
     pub fn process(&mut self) -> f64 {
         let out = self.oscillator.process(self.time_since_on);
         self.time_since_on += self.time_per_sample;
-        out * self.envelope()
+        out * self.envelope() * self.velocity_amp()
+    }
+
+    fn velocity_amp(&self) -> f64 {
+        self.velocity as f64 / 127.0
     }
 
     fn envelope(&mut self) -> f64 {
