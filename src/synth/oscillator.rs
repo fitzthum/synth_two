@@ -1,6 +1,5 @@
 use rust_embed::RustEmbed;
 use serde::Deserialize;
-use std::f64::consts::PI;
 
 const WAVE_TABLE_LENGTH: usize = 4096;
 
@@ -18,21 +17,6 @@ pub trait Oscillator {
     fn process(&self, time: f64) -> f64;
 }
 
-pub struct SineOscillator {
-    frequency: f64,
-}
-
-impl SineOscillator {
-    pub fn new(frequency: f64) -> Self {
-        Self { frequency }
-    }
-}
-
-impl Oscillator for SineOscillator {
-    fn process(&self, time: f64) -> f64 {
-        (time * self.frequency * PI * 2.0).sin()
-    }
-}
 
 #[derive(RustEmbed)]
 #[folder = "waves"]

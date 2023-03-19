@@ -2,7 +2,7 @@
 use std::sync::Arc;
 
 use crate::synth::envelope::{Envelope, ADSR};
-use crate::synth::oscillator::{Oscillator, SineOscillator, WaveTableOscillator};
+use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
 use crate::SynthTwoParams;
 
 fn midi_note_to_freq(note: u8) -> f64 {
