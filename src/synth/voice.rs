@@ -1,9 +1,9 @@
 // A voice roughly corresponds to a note
 use std::sync::Arc;
 
-use crate::SynthTwoParams;
-use crate::synth::oscillator::{Oscillator, SineOscillator};
 use crate::synth::envelope::{Envelope, ADSR};
+use crate::synth::oscillator::{Oscillator, SineOscillator};
+use crate::SynthTwoParams;
 
 fn midi_note_to_freq(note: u8) -> f64 {
     const A4_PITCH: i8 = 69;
@@ -66,15 +66,16 @@ impl Voice {
     }
 
     fn envelope(&mut self) -> f64 {
-        let mut env = ADSR::new(self.plugin_params.attack.smoothed.next(),
+        let mut env = ADSR::new(
+            self.plugin_params.attack.smoothed.next(),
             self.plugin_params.decay.smoothed.next(),
             self.plugin_params.sustain.smoothed.next(),
-            self.plugin_params.release.smoothed.next());
+            self.plugin_params.release.smoothed.next(),
+        );
 
         let out = env.process(self.time_since_on, self.time_off);
         self.finished = env.finished;
 
         out
-
     }
 }

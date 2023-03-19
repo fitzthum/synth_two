@@ -1,6 +1,6 @@
 use nih_plug::prelude::*;
-use std::sync::Arc;
 use nih_plug_iced::IcedState;
+use std::sync::Arc;
 
 mod synth;
 use synth::Synth;
@@ -11,7 +11,7 @@ struct SynthTwo {
     params: Arc<SynthTwoParams>,
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
-    // but I don't really want to do that 
+    // but I don't really want to do that
     editor_state: Arc<IcedState>,
     synth: Synth,
 }
@@ -32,8 +32,6 @@ pub struct SynthTwoParams {
 
     #[id = "release"]
     pub release: FloatParam,
-
-
 }
 
 impl Default for SynthTwo {
@@ -65,53 +63,24 @@ impl Default for SynthTwoParams {
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
 
             // Attack
-            attack: FloatParam::new(
-                "Attack",
-                0.0,
-                FloatRange::Linear {
-                    min: 0.0,
-                    max: 5.0,
-                },
-            )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
-            .with_unit(" seconds"),
+            attack: FloatParam::new("Attack", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0))
+                .with_unit(" seconds"),
 
             // Decay
-            decay: FloatParam::new(
-                "Decay",
-                0.0,
-                FloatRange::Linear {
-                    min: 0.0,
-                    max: 5.0,
-                },
-            )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
-            .with_unit(" seconds"),
+            decay: FloatParam::new("Decay", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0))
+                .with_unit(" seconds"),
 
             // Sustain
-            sustain: FloatParam::new(
-                "Sustain",
-                0.0,
-                FloatRange::Linear {
-                    min: 0.0,
-                    max: 1.0,
-                },
-            )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
-            .with_unit(" percet"),
+            sustain: FloatParam::new("Sustain", 0.0, FloatRange::Linear { min: 0.0, max: 1.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0))
+                .with_unit(" percet"),
 
             // Release
-            release: FloatParam::new(
-                "Release",
-                0.0,
-                FloatRange::Linear {
-                    min: 0.0,
-                    max: 5.0,
-                },
-            )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
-            .with_unit(" seconds"),
-
+            release: FloatParam::new("Release", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+                .with_smoother(SmoothingStyle::Logarithmic(50.0))
+                .with_unit(" seconds"),
         }
     }
 }
@@ -154,12 +123,8 @@ impl Plugin for SynthTwo {
         self.params.clone()
     }
 
-
     fn editor(&self, _async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
-        editor::create(
-            self.params.clone(),
-            self.editor_state.clone(),
-            )
+        editor::create(self.params.clone(), self.editor_state.clone())
     }
 
     fn initialize(
@@ -167,7 +132,7 @@ impl Plugin for SynthTwo {
         _audio_io_layout: &AudioIOLayout,
         buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
-        ) -> bool {
+    ) -> bool {
         self.synth
             .initialize(self.params.clone(), buffer_config.sample_rate.into());
 
@@ -186,7 +151,7 @@ impl Plugin for SynthTwo {
         buffer: &mut Buffer,
         _aux: &mut AuxiliaryBuffers,
         context: &mut impl ProcessContext<Self>,
-        ) -> ProcessStatus {
+    ) -> ProcessStatus {
         // with vst3/nih we handle the midi events and audio processing both in this function
         let mut next_event = context.next_event();
 

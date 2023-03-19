@@ -4,8 +4,8 @@ use std::sync::Arc;
 mod voice;
 use voice::Voice;
 
-mod oscillator;
 mod envelope;
+mod oscillator;
 
 use crate::SynthTwoParams;
 

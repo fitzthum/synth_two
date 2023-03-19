@@ -37,7 +37,6 @@ impl Envelope for ADSR {
             if time < self.attack {
                 alpha = time * (1.0 / self.attack);
                 self.max_alpha = alpha;
-
             } else if time < self.attack + self.decay {
                 alpha = 1.0 - (time - self.attack) * ((1.0 - self.sustain) / self.decay);
             } else {
@@ -51,8 +50,7 @@ impl Envelope for ADSR {
             let time_since_off = time - time_off;
             if time_since_off < self.release {
                 alpha = sustain - (time_since_off * (self.sustain / self.release))
-            }
-            else {
+            } else {
                 self.finished = true;
             }
         }

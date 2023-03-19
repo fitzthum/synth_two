@@ -2,13 +2,12 @@ use nih_plug::prelude::{util, Editor, GuiContext};
 use nih_plug_iced::widgets as nih_widgets;
 use nih_plug_iced::*;
 use std::sync::Arc;
-use std::time::Duration;
 
 use crate::SynthTwoParams;
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<IcedState> {
-    IcedState::from_size(200, 150)
+    IcedState::from_size(600, 450)
 }
 
 pub(crate) fn create(
@@ -67,29 +66,30 @@ impl IcedEditor for SynthTwoEditor {
     }
 
     fn view(&mut self) -> Element<'_, Self::Message> {
-        Column::new()
-            .align_items(Alignment::Center)
-            .push(
-                Text::new("Synth Two")
-                    .font(assets::NOTO_SANS_LIGHT)
-                    .size(40)
-                    .height(50.into())
-                    .width(Length::Fill)
-                    .horizontal_alignment(alignment::Horizontal::Center)
-                    .vertical_alignment(alignment::Vertical::Bottom),
-            )
-            .push(
-                Text::new("Gain")
-                    .height(20.into())
-                    .width(Length::Fill)
-                    .horizontal_alignment(alignment::Horizontal::Center)
-                    .vertical_alignment(alignment::Vertical::Center),
-            )
-            .push(
-                nih_widgets::ParamSlider::new(&mut self.gain_slider_state, &self.params.gain)
-                    .map(Message::ParamUpdate),
-            )
-            .into()
+        Container::new(
+            Column::new().push(Space::with_height(20.into())).push(
+                Row::new()
+                    .align_items(Alignment::Start)
+                    .push(Space::with_width(20.into()))
+                    .push(
+                        Text::new("Gain")
+                            .height(26.into())
+                            .width(Length::Shrink)
+                            .horizontal_alignment(alignment::Horizontal::Left)
+                            .vertical_alignment(alignment::Vertical::Center),
+                    )
+                    .push(Space::with_width(5.into()))
+                    .push(
+                        nih_widgets::ParamSlider::new(
+                            &mut self.gain_slider_state,
+                            &self.params.gain,
+                        )
+                        .map(Message::ParamUpdate),
+                    ),
+            ),
+        )
+        .height(Length::Fill)
+        .into()
     }
 
     fn background_color(&self) -> nih_plug_iced::Color {
