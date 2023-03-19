@@ -148,30 +148,34 @@ impl Default for SynthTwoParams {
             warp_attack_1: FloatParam::new(
                 "Warp Attack One",
                 0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             warp_decay_1: FloatParam::new(
                 "Warp Decay One",
-                0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             warp_sustain_1: FloatParam::new(
                 "Warp Sustain One",
-                0.5,
+                1.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" percent"),
 
             warp_release_1: FloatParam::new(
                 "Warp Release One",
-                0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             // Wave warp stuff for second oscillator
             wave_index_2: FloatParam::new(
@@ -193,31 +197,35 @@ impl Default for SynthTwoParams {
 
             warp_attack_2: FloatParam::new(
                 "Warp Attack Two",
-                0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                0.2,
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             warp_decay_2: FloatParam::new(
                 "Warp Decay Two",
-                0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                0.2,
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             warp_sustain_2: FloatParam::new(
                 "Warp Sustain Two",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" percent"),
 
             warp_release_2: FloatParam::new(
                 "Warp Release Two",
-                0.5,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 5.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             // Oscillator Balance
             oscillator_balance: FloatParam::new(
