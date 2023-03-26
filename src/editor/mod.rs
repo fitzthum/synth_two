@@ -37,6 +37,7 @@ pub(crate) fn create(
 
         VStack::new(cx, |cx| {
             top(cx);
+            oscillators(cx);
 
        })
         .row_between(Pixels(0.0))
@@ -78,3 +79,60 @@ fn top_right(cx: &mut Context) {
 
     });
 }
+
+fn oscillators(cx: &mut Context) {
+    HStack::new(cx, |cx| {
+        oscillator1(cx);
+        oscillator2(cx);
+
+    });
+}
+
+// in theory this should be generic but idk how
+fn oscillator1(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Wave Index");
+        ParamSlider::new(cx, Data::params, |params| &params.wave_index_1);
+
+        Label::new(cx, "Wave Warp");
+        ParamSlider::new(cx, Data::params, |params| &params.wave_warp_1);
+
+        Label::new(cx, "Warp Attack");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_attack_1);
+
+        Label::new(cx, "Warp Decay");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_decay_1);
+
+        Label::new(cx, "Warp Sustain");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_sustain_1);
+
+        Label::new(cx, "Warp Release");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_release_1);
+
+    });
+}
+
+fn oscillator2(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Wave Index");
+        ParamSlider::new(cx, Data::params, |params| &params.wave_index_2);
+
+        Label::new(cx, "Wave Warp");
+        ParamSlider::new(cx, Data::params, |params| &params.wave_warp_2);
+
+        Label::new(cx, "Warp Attack");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_attack_2);
+
+        Label::new(cx, "Warp Decay");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_decay_2);
+
+        Label::new(cx, "Warp Sustain");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_sustain_2);
+
+        Label::new(cx, "Warp Release");
+        ParamSlider::new(cx, Data::params, |params| &params.warp_release_2);
+
+    });
+}
+
+
