@@ -1,5 +1,5 @@
 use nih_plug::prelude::*;
-use nih_plug_iced::IcedState;
+use nih_plug_vizia::ViziaState;
 use std::sync::Arc;
 
 #[macro_use]
@@ -15,7 +15,7 @@ struct SynthTwo {
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
     // but I don't really want to do that
-    editor_state: Arc<IcedState>,
+    editor_state: Arc<ViziaState>,
     synth: Synth,
 }
 
