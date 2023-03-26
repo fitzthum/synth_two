@@ -1,0 +1,40 @@
+:root {
+		background-color: #7D7D7D;
+		color: #fdfdfd;
+		font-weight: bold;
+		font-size: 17;
+}
+
+.row {
+		left:10px;
+		col-between:8px;
+		layout-type:row;
+}
+
+.label {
+		top:2px;
+		right:5px;
+}
+
+
+.quarter {
+		display: block;
+		background-color: #1F1F1F;
+		border-radius: 4px;
+		border-color: black;
+		border-width: 3px;
+		top:10px;
+		left:10px;
+		width:300px;
+		height:300px;
+		column-gap:8px;
+
+}
+
+
+.osc-title {
+		font-size:20px;
+		top:10px;
+		bottom:5px;
+
+}
