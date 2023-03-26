@@ -36,12 +36,45 @@ pub(crate) fn create(
         ResizeHandle::new(cx);
 
         VStack::new(cx, |cx| {
+            top(cx);
 
-            Label::new(cx, "Gain");
-            ParamSlider::new(cx, Data::params, |params| &params.gain);
-        })
+       })
         .row_between(Pixels(0.0))
         .child_left(Stretch(1.0))
         .child_right(Stretch(1.0));
     })
+}
+
+// Top half of editor, stores global params
+fn top(cx: &mut Context) {
+    HStack::new(cx, |cx| {
+        top_left(cx);
+        top_right(cx);
+    });
+}
+
+fn top_left(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Gain");
+        ParamSlider::new(cx, Data::params, |params| &params.gain);
+ 
+    });
+}
+
+fn top_right(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        // ADSR
+        Label::new(cx, "Attack");
+        ParamSlider::new(cx, Data::params, |params| &params.attack);
+
+        Label::new(cx, "Decay");
+        ParamSlider::new(cx, Data::params, |params| &params.decay);
+
+        Label::new(cx, "Sustain");
+        ParamSlider::new(cx, Data::params, |params| &params.sustain);
+
+        Label::new(cx, "Release");
+        ParamSlider::new(cx, Data::params, |params| &params.release);
+
+    });
 }
