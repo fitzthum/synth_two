@@ -56,6 +56,10 @@ fn top_left(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Gain");
         ParamSlider::new(cx, Data::params, |params| &params.gain);
+
+        // Maybe move this to the middle at some point
+        Label::new(cx, "Oscillator Balance");
+        ParamSlider::new(cx, Data::params, |params| &params.oscillator_balance);
  
     });
 }
