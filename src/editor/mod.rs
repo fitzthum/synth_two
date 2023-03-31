@@ -1,7 +1,7 @@
 use nih_plug::prelude::Editor;
 use nih_plug_vizia::vizia::prelude::*;
 use nih_plug_vizia::widgets::*;
-use nih_plug_vizia::{assets, create_vizia_editor, ViziaState, ViziaTheming};
+use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
 use std::sync::Arc;
 
 use crate::SynthTwoParams;
@@ -15,7 +15,7 @@ impl Model for Data {}
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-    ViziaState::new(|| (700, 700))
+    ViziaState::new(|| (700, 510))
 }
 
 pub(crate) fn create(
@@ -23,8 +23,8 @@ pub(crate) fn create(
     editor_state: Arc<ViziaState>,
 ) -> Option<Box<dyn Editor>> {
     create_vizia_editor(editor_state, ViziaTheming::Custom, move |cx, _| {
-        assets::register_noto_sans_light(cx);
-        assets::register_noto_sans_thin(cx);
+        cx.add_fonts_mem(&[b"Px IBM MDA"]);
+        cx.set_default_font(&["Px IBM MDA"]);
 
         cx.add_theme(include_str!("theme.css"));
 
@@ -51,7 +51,7 @@ fn top(cx: &mut Context) {
     HStack::new(cx, |cx| {
         top_left(cx);
         top_right(cx);
-    });
+    }).class("top");
 }
 
 fn top_left(cx: &mut Context) {
@@ -63,7 +63,7 @@ fn top_left(cx: &mut Context) {
 
         // Maybe move this to the middle at some point
         HStack::new(cx, |cx| {
-            Label::new(cx, "Oscillator Balance").class("label");
+            Label::new(cx, "Osc Balance").class("label");
             ParamSlider::new(cx, Data::params, |params| &params.oscillator_balance);
         }).class("row");
  
@@ -103,7 +103,9 @@ fn oscillators(cx: &mut Context) {
         oscillator1(cx);
         oscillator2(cx);
 
-    });
+    })
+    .position_type(PositionType::SelfDirected)
+    .id("oscillators");
 }
 
 // in theory this should be generic but idk how

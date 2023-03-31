@@ -7,5 +7,5 @@ A second attempt at a synth. This time based on [nih_plug](https://github.com/ro
 After installing [Rust](https://rustup.rs/), you can compile Synth Two as follows:
 
 ```shell
-cargo xtask bundle synth_two --release
+cargo +nightly xtask bundle synth_two --release
 ```

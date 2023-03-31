@@ -7,13 +7,15 @@
 
 .row {
 		left:10px;
+		right:20px;
 		col-between:8px;
 		layout-type:row;
 }
 
 .label {
 		top:2px;
-		right:5px;
+		left:1s;
+		right:0;
 }
 
 
@@ -26,15 +28,23 @@
 		top:10px;
 		left:10px;
 		width:300px;
-		height:300px;
+		height:320px;
 		column-gap:8px;
 
 }
 
+.top .quarter {
+	height:150px;
+}
+
+#oscillators {
+	top:166px;
+}
 
 .osc-title {
 		font-size:20px;
-		top:10px;
+		top:5px;
+		left:8px;
 		bottom:5px;
 
 }
