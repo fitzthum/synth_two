@@ -78,7 +78,7 @@ impl Voice {
         let o2 = self.oscillator2.process(self.time_since_on);
 
         let balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
-        let ob = (o1 * balance) + (o2 * (1.0 - balance));
+        let ob = (o2 * balance) + (o1 * (1.0 - balance));
 
         self.time_since_on += self.time_per_sample;
         ob * self.main_envelope() * self.velocity as f64
