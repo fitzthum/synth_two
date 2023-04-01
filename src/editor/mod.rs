@@ -6,6 +6,9 @@ use std::sync::Arc;
 
 use crate::SynthTwoParams;
 
+mod knob;
+use knob::ParamKnob;
+
 #[derive(Lens)]
 struct Data {
     params: Arc<SynthTwoParams>,
@@ -56,10 +59,14 @@ fn top(cx: &mut Context) {
 
 fn top_left(cx: &mut Context) {
     VStack::new(cx, |cx| {
+        /*
         HStack::new(cx, |cx| {
             Label::new(cx, "Gain").class("label").class("label");
             ParamSlider::new(cx, Data::params, |params| &params.gain);
         }).class("row");
+        */
+        ParamKnob::new(cx, Data::params, |params| &params.gain);
+
 
         // Maybe move this to the middle at some point
         HStack::new(cx, |cx| {
