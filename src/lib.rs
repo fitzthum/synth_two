@@ -128,7 +128,7 @@ impl Default for SynthTwoParams {
 
             // Wave warp stuff or first oscillator
             wave_index_1: FloatParam::new(
-                "Wave Index One",
+                "Wave Index",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
@@ -136,7 +136,7 @@ impl Default for SynthTwoParams {
 
             // this time we can scale this here rather than arithmetically later
             wave_warp_1: FloatParam::new(
-                "Wave Warp One",
+                "Wave Warp",
                 0.0,
                 FloatRange::Linear {
                     min: -1.0,
@@ -146,7 +146,7 @@ impl Default for SynthTwoParams {
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             warp_attack_1: FloatParam::new(
-                "Warp Attack One",
+                "Warp Attack",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
@@ -154,7 +154,7 @@ impl Default for SynthTwoParams {
             .with_unit(" seconds"),
 
             warp_decay_1: FloatParam::new(
-                "Warp Decay One",
+                "Warp Decay",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
@@ -162,7 +162,7 @@ impl Default for SynthTwoParams {
             .with_unit(" seconds"),
 
             warp_sustain_1: FloatParam::new(
-                "Warp Sustain One",
+                "Warp Sustain",
                 1.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
@@ -170,7 +170,7 @@ impl Default for SynthTwoParams {
             .with_unit(" percent"),
 
             warp_release_1: FloatParam::new(
-                "Warp Release One",
+                "Warp Release",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
@@ -179,14 +179,14 @@ impl Default for SynthTwoParams {
 
             // Wave warp stuff for second oscillator
             wave_index_2: FloatParam::new(
-                "Wave Index Two",
+                "Wave Index",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             wave_warp_2: FloatParam::new(
-                "Wave Warp Two",
+                "Wave Warp",
                 0.0,
                 FloatRange::Linear {
                     min: -1.0,
@@ -196,7 +196,7 @@ impl Default for SynthTwoParams {
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             warp_attack_2: FloatParam::new(
-                "Warp Attack Two",
+                "Warp Attack",
                 0.2,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
@@ -204,7 +204,7 @@ impl Default for SynthTwoParams {
             .with_unit(" seconds"),
 
             warp_decay_2: FloatParam::new(
-                "Warp Decay Two",
+                "Warp Decay",
                 0.2,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
@@ -212,7 +212,7 @@ impl Default for SynthTwoParams {
             .with_unit(" seconds"),
 
             warp_sustain_2: FloatParam::new(
-                "Warp Sustain Two",
+                "Warp Sustain",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
@@ -220,7 +220,7 @@ impl Default for SynthTwoParams {
             .with_unit(" percent"),
 
             warp_release_2: FloatParam::new(
-                "Warp Release Two",
+                "Warp Release",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )

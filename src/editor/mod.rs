@@ -95,40 +95,24 @@ fn oscillators(cx: &mut Context) {
 }
 
 // in theory this should be generic but idk how
+// maybe if we had a struct for the state of each oscillator
 fn oscillator1(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Oscillator 1").class("osc-title");
 
+        // wave controls
         HStack::new(cx, |cx| {
-            Label::new(cx, "Wave Index").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.wave_index_1);
-        }).class("row");
+            ParamKnob::new(cx, Data::params, |params| &params.wave_index_1);
+            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1);
+        });
 
+        // warp adsr
         HStack::new(cx, |cx| {
-            Label::new(cx, "Wave Warp").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.wave_warp_1);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Attack").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_attack_1);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Decay").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_decay_1);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Sustain").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_sustain_1);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Release").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_release_1);
-        }).class("row");
-
+            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_1);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_1);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_1);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_release_1);
+        });
     })
     .class("quarter");
 }
@@ -137,36 +121,19 @@ fn oscillator2(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Oscillator 2").class("osc-title");
 
+        // wave controls
         HStack::new(cx, |cx| {
-            Label::new(cx, "Wave Index").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.wave_index_2);
-        }).class("row");
+            ParamKnob::new(cx, Data::params, |params| &params.wave_index_2);
+            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2);
+        });
 
+        // warp adsr
         HStack::new(cx, |cx| {
-            Label::new(cx, "Wave Warp").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.wave_warp_2);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Attack").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_attack_2);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Decay").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_decay_2);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Sustain").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_sustain_2);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Warp Release").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.warp_release_2);
-        }).class("row");
-
+            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_2);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_2);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_2);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_release_2);
+        });
     })
     .class("quarter");
 }
