@@ -33,15 +33,27 @@ impl ParamKnob {
             cx,
             ParamWidgetBase::build_view(params.clone(), params_to_param, move |cx, param_data| {
                 VStack::new(cx, |cx| {
-                    // Label
+
                     Label::new(cx, param_data.param().name());
                     
                     let value_lens = param_data.make_lens(|param| param.unmodulated_normalized_value());
-                    Knob::new(cx, 0.5, value_lens, false)
+                    // no lens needed for the default value. hopefully
+                    let default_value = param_data.param().default_normalized_value();
+
+                    Knob::custom(cx, default_value, value_lens, move |cx, lens| {
+                        TickKnob::new(
+                            cx,
+                            Percentage(100.0),
+                            Percentage(20.0),
+                            Percentage(50.0),
+                            300.0,
+                            KnobMode::Continuous)
+                            .value(lens)
+                            .class("track")
+                        })
                         .on_changing(move |cx, val| {
                             cx.emit(ParamKnobEvent::ValUpdate(val));
-                        })
-                        .color(Color::red());
+                        });
                 });
             }),
         )
@@ -60,6 +72,7 @@ impl View for ParamKnob {
             ParamKnobEvent::ValUpdate(val) => {
                 self.param_base.begin_set_parameter(cx);
                 self.param_base.set_normalized_value(cx, *val);
+
                 self.param_base.end_set_parameter(cx);
 
                 meta.consume();

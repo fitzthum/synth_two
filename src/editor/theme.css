@@ -53,3 +53,7 @@ knob {
 	height:40px;
 	width:40px;
 }
+
+knob .track {
+  background-color: #47B8C2;
+}
