@@ -229,7 +229,7 @@ impl Default for SynthTwoParams {
 
             // Oscillator Balance
             oscillator_balance: FloatParam::new(
-                "Oscillator Balance",
+                "Balance",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )

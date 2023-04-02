@@ -34,7 +34,8 @@ impl ParamKnob {
             ParamWidgetBase::build_view(params.clone(), params_to_param, move |cx, param_data| {
                 VStack::new(cx, |cx| {
 
-                    Label::new(cx, param_data.param().name());
+                    Label::new(cx, param_data.param().name())
+                        .width(Pixels(100.0));
                     
                     let value_lens = param_data.make_lens(|param| param.unmodulated_normalized_value());
                     // no lens needed for the default value. hopefully

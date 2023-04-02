@@ -13,14 +13,16 @@
 }
 
 .label {
-		top:2px;
+		top:4px;
+		bottom:4px;
 		left:1s;
-		right:0;
+		right:1s;
+		width:100px;
+		text-align:center;
 }
 
 
 .quarter {
-		display: block;
 		background-color: #1F1F1F;
 		border-radius: 4px;
 		border-color: black;
@@ -52,6 +54,8 @@
 knob {
 	height:40px;
 	width:40px;
+	left:1s;
+	right:1s;
 }
 
 knob .track {

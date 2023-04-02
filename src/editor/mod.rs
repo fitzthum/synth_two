@@ -18,7 +18,7 @@ impl Model for Data {}
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-    ViziaState::new(|| (700, 510))
+    ViziaState::new(|| (800, 510))
 }
 
 pub(crate) fn create(
@@ -59,21 +59,11 @@ fn top(cx: &mut Context) {
 
 fn top_left(cx: &mut Context) {
     VStack::new(cx, |cx| {
-        /*
+        // Main controls
         HStack::new(cx, |cx| {
-            Label::new(cx, "Gain").class("label").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.gain);
-        }).class("row");
-        */
-        ParamKnob::new(cx, Data::params, |params| &params.gain);
-
-
-        // Maybe move this to the middle at some point
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Osc Balance").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.oscillator_balance);
-        }).class("row");
- 
+            ParamKnob::new(cx, Data::params, |params| &params.gain);
+            ParamKnob::new(cx, Data::params, |params| &params.oscillator_balance);
+        });
     })
     .class("quarter");
 }
@@ -82,24 +72,13 @@ fn top_right(cx: &mut Context) {
     VStack::new(cx, |cx| {
         // ADSR
         HStack::new(cx, |cx| {
-            Label::new(cx, "Attack").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.attack);
-        }).class("row");
+            ParamKnob::new(cx, Data::params, |params| &params.attack);
+            ParamKnob::new(cx, Data::params, |params| &params.decay);
+            ParamKnob::new(cx, Data::params, |params| &params.sustain);
+            ParamKnob::new(cx, Data::params, |params| &params.release);
+        });
 
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Decay").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.decay);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Sustain").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.sustain);
-        }).class("row");
-
-        HStack::new(cx, |cx| {
-            Label::new(cx, "Release").class("label");
-            ParamSlider::new(cx, Data::params, |params| &params.release);
-        }).class("row");
+        // ADSR Graph goes here
 
     })
     .class("quarter");
