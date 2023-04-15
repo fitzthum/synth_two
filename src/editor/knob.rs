@@ -55,7 +55,9 @@ impl ParamKnob {
                         .on_changing(move |cx, val| {
                             cx.emit(ParamKnobEvent::ValUpdate(val));
                         });
-                });
+                })
+                .row_between(Pixels(10.0))
+                .child_space(Stretch(1.0));
             }),
         )
     }

@@ -6,19 +6,13 @@
 }
 
 .row {
-		left:10px;
-		right:20px;
-		col-between:8px;
-		layout-type:row;
+		bottom:20px;
 }
 
-.label {
-		top:4px;
-		bottom:4px;
-		left:1s;
-		right:1s;
+label {
+		height:30px;
 		width:100px;
-		text-align:center;
+		child-space: 1s;
 }
 
 
@@ -29,25 +23,30 @@
 		border-width: 3px;
 		top:10px;
 		left:10px;
-		width:300px;
-		height:320px;
-		column-gap:8px;
+		width:20px;
+		height:100px;
+		column-gap:20px;
 
 }
 
 .top .quarter {
-	height:150px;
+		height:100px;
 }
 
+.envelope {
+	bottom:20px;
+
+}
 #oscillators {
 	top:166px;
 }
 
-.osc-title {
+.section-title {
 		font-size:20px;
-		top:5px;
-		left:8px;
+		top:0px;
+		left:0px;
 		bottom:5px;
+		width:150px;
 
 }
 

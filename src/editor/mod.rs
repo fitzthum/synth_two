@@ -18,7 +18,7 @@ impl Model for Data {}
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-    ViziaState::new(|| (800, 510))
+    ViziaState::new(|| (1000, 510))
 }
 
 pub(crate) fn create(
@@ -42,10 +42,7 @@ pub(crate) fn create(
             top(cx);
             oscillators(cx);
 
-       })
-        .row_between(Pixels(0.0))
-        .child_left(Stretch(1.0))
-        .child_right(Stretch(1.0));
+       });
     })
 }
 
@@ -59,24 +56,26 @@ fn top(cx: &mut Context) {
 
 fn top_left(cx: &mut Context) {
     VStack::new(cx, |cx| {
+        Label::new(cx, "General").class("section-title");
         // Main controls
         HStack::new(cx, |cx| {
             ParamKnob::new(cx, Data::params, |params| &params.gain);
             ParamKnob::new(cx, Data::params, |params| &params.oscillator_balance);
-        });
+        }).class("row");
     })
     .class("quarter");
 }
 
 fn top_right(cx: &mut Context) {
     VStack::new(cx, |cx| {
+        Label::new(cx, "Envelope").class("section-title");
         // ADSR
         HStack::new(cx, |cx| {
             ParamKnob::new(cx, Data::params, |params| &params.attack);
             ParamKnob::new(cx, Data::params, |params| &params.decay);
             ParamKnob::new(cx, Data::params, |params| &params.sustain);
             ParamKnob::new(cx, Data::params, |params| &params.release);
-        });
+        }).class("row");
 
         // ADSR Graph goes here
 
@@ -98,13 +97,13 @@ fn oscillators(cx: &mut Context) {
 // maybe if we had a struct for the state of each oscillator
 fn oscillator1(cx: &mut Context) {
     VStack::new(cx, |cx| {
-        Label::new(cx, "Oscillator 1").class("osc-title");
+        Label::new(cx, "Oscillator 1").class("section-title");
 
         // wave controls
         HStack::new(cx, |cx| {
             ParamKnob::new(cx, Data::params, |params| &params.wave_index_1);
             ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1);
-        });
+        }).class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
@@ -112,20 +111,20 @@ fn oscillator1(cx: &mut Context) {
             ParamKnob::new(cx, Data::params, |params| &params.warp_decay_1);
             ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_1);
             ParamKnob::new(cx, Data::params, |params| &params.warp_release_1);
-        });
+        }).class("row");
     })
     .class("quarter");
 }
 
 fn oscillator2(cx: &mut Context) {
     VStack::new(cx, |cx| {
-        Label::new(cx, "Oscillator 2").class("osc-title");
+        Label::new(cx, "Oscillator 2").class("section-title");
 
         // wave controls
         HStack::new(cx, |cx| {
             ParamKnob::new(cx, Data::params, |params| &params.wave_index_2);
             ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2);
-        });
+        }).class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
@@ -133,7 +132,7 @@ fn oscillator2(cx: &mut Context) {
             ParamKnob::new(cx, Data::params, |params| &params.warp_decay_2);
             ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_2);
             ParamKnob::new(cx, Data::params, |params| &params.warp_release_2);
-        });
+        }).class("row");
     })
     .class("quarter");
 }
