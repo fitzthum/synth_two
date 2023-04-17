@@ -9,6 +9,9 @@ use crate::SynthTwoParams;
 mod knob;
 use knob::ParamKnob;
 
+mod envelope;
+use envelope::EnvelopeGraph;
+
 #[derive(Lens)]
 struct Data {
     params: Arc<SynthTwoParams>,
@@ -59,8 +62,8 @@ fn top_left(cx: &mut Context) {
         Label::new(cx, "General").class("section-title");
         // Main controls
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.gain);
-            ParamKnob::new(cx, Data::params, |params| &params.oscillator_balance);
+            ParamKnob::new(cx, Data::params, |params| &params.gain, None);
+            ParamKnob::new(cx, Data::params, |params| &params.oscillator_balance, Some("Balance"));
         }).class("row");
     })
     .class("quarter");
@@ -71,10 +74,11 @@ fn top_right(cx: &mut Context) {
         Label::new(cx, "Envelope").class("section-title");
         // ADSR
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.attack);
-            ParamKnob::new(cx, Data::params, |params| &params.decay);
-            ParamKnob::new(cx, Data::params, |params| &params.sustain);
-            ParamKnob::new(cx, Data::params, |params| &params.release);
+            ParamKnob::new(cx, Data::params, |params| &params.attack, Some("A"));
+            ParamKnob::new(cx, Data::params, |params| &params.decay, Some("D"));
+            ParamKnob::new(cx, Data::params, |params| &params.sustain, Some("S"));
+            ParamKnob::new(cx, Data::params, |params| &params.release, Some("R"));
+            EnvelopeGraph::new(cx).class("envelope-graph");
         }).class("row");
 
         // ADSR Graph goes here
@@ -101,16 +105,16 @@ fn oscillator1(cx: &mut Context) {
 
         // wave controls
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.wave_index_1);
-            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1);
+            ParamKnob::new(cx, Data::params, |params| &params.wave_index_1, Some("Index"));
+            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1, Some("Warp"));
         }).class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_1);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_1);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_1);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_release_1);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_1, Some("A"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_1, Some("D"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_1, Some("S"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_release_1, Some("R"));
         }).class("row");
     })
     .class("quarter");
@@ -122,16 +126,16 @@ fn oscillator2(cx: &mut Context) {
 
         // wave controls
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.wave_index_2);
-            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2);
+            ParamKnob::new(cx, Data::params, |params| &params.wave_index_2, Some("Index"));
+            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2, Some("Warp"));
         }).class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_2);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_2);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_2);
-            ParamKnob::new(cx, Data::params, |params| &params.warp_release_2);
+            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_2, Some("A"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_2, Some("D"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_2, Some("S"));
+            ParamKnob::new(cx, Data::params, |params| &params.warp_release_2, Some("R"));
         }).class("row");
     })
     .class("quarter");

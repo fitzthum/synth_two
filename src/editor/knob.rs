@@ -15,11 +15,12 @@ enum ParamKnobEvent {
 }
 
 impl ParamKnob {
-    pub fn new<L, Params, P, FMap>(
-        cx: &mut Context,
+    pub fn new<'a, L, Params, P, FMap>(
+        cx: &'a mut Context,
         params: L,
         params_to_param: FMap,
-    ) -> Handle<Self>
+        label: Option<&str>,
+    ) -> Handle<'a, Self>
     where
         L: Lens<Target = Params> + Clone,
         Params: 'static,
@@ -33,8 +34,10 @@ impl ParamKnob {
             cx,
             ParamWidgetBase::build_view(params.clone(), params_to_param, move |cx, param_data| {
                 VStack::new(cx, |cx| {
+                    
+                    let name = label.unwrap_or(param_data.param().name());
 
-                    Label::new(cx, param_data.param().name())
+                    Label::new(cx, name)
                         .width(Pixels(100.0));
                     
                     let value_lens = param_data.make_lens(|param| param.unmodulated_normalized_value());
