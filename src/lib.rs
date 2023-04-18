@@ -15,6 +15,7 @@ struct SynthTwo {
 
     // data that we use to draw graphs in the editor
     envelope: Arc<Mutex<Vec<f32>>>,
+    graph_samples: Arc<Mutex<Vec<f32>>>,
 
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
@@ -94,6 +95,7 @@ impl Default for SynthTwo {
         Self {
             params,
             envelope,
+            graph_samples: Arc::new(Mutex::new(vec![])),
             editor_state: editor::default_state(),
             synth: Synth::default(),
         }
@@ -292,6 +294,7 @@ impl Plugin for SynthTwo {
         let data = editor::Data {
             params: self.params.clone(),
             envelope: self.envelope.clone(),
+            graph_samples: self.graph_samples.clone(),
         };
         editor::create(data, self.editor_state.clone())
     }
@@ -306,6 +309,7 @@ impl Plugin for SynthTwo {
             self.params.clone(),
             buffer_config.sample_rate.into(),
             self.envelope.clone(),
+            self.graph_samples.clone(),
         );
 
         // Resize buffers and perform other potentially expensive initialization operations here.
@@ -326,7 +330,9 @@ impl Plugin for SynthTwo {
     ) -> ProcessStatus {
         let mut next_event = context.next_event();
 
-        for channel_samples in buffer.iter_samples() {
+        const GRAPH_SAMPLE_RATIO: usize = 4;
+        let mut graph_samples = vec![]; 
+        for (n, channel_samples) in buffer.iter_samples().enumerate() {
             // process midi events
             while let Some(event) = next_event {
                 match event {
@@ -344,13 +350,23 @@ impl Plugin for SynthTwo {
             // Smoothing is optionally built into the parameters themselves
             let gain = self.params.gain.smoothed.next();
 
+            let output_sample = self.synth.process_sample() as f32;
+
             for sample in channel_samples {
-                *sample = self.synth.process_sample() as f32 * gain;
+                *sample = output_sample * gain; 
+            }
+            
+            if n % GRAPH_SAMPLE_RATIO == 0 {
+                graph_samples.push(output_sample);
             }
 
             // clear out unused voices
             self.synth.reap_voices();
         }
+
+        // push the samples to the mutex
+        *self.graph_samples.lock().unwrap() = graph_samples;
+
 
         ProcessStatus::Normal
     }

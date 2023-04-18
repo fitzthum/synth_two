@@ -11,10 +11,14 @@ use knob::ParamKnob;
 mod envelope;
 use envelope::EnvelopeGraph;
 
+mod wave;
+use wave::WaveGraph;
+
 #[derive(Lens, Clone)]
 pub struct Data {
     pub params: Arc<SynthTwoParams>,
     pub envelope: Arc<Mutex<Vec<f32>>>,
+    pub graph_samples: Arc<Mutex<Vec<f32>>>,
 }
 
 impl Model for Data {}
@@ -63,6 +67,7 @@ fn top_left(cx: &mut Context) {
                 |params| &params.oscillator_balance,
                 Some("Balance"),
             );
+            WaveGraph::new(cx, Data::graph_samples).class("graph");
         })
         .class("row");
     })
@@ -79,7 +84,7 @@ fn top_right(cx: &mut Context) {
             ParamKnob::new(cx, Data::params, |params| &params.sustain, Some("S"));
             ParamKnob::new(cx, Data::params, |params| &params.release, Some("R"));
             // need to make lens for adsr
-            EnvelopeGraph::new(cx, Data::envelope).class("envelope-graph");
+            EnvelopeGraph::new(cx, Data::envelope).class("graph");
         })
         .class("row");
 

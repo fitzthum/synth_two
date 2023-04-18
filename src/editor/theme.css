@@ -61,7 +61,7 @@ knob .track {
   background-color: #47B8C2;
 }
 
-.envelope-graph {
+.graph {
 	height:50px;
 	width:100px;
 	right:10px;

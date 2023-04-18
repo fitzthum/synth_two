@@ -1,0 +1,57 @@
+use nih_plug_vizia::vizia::prelude::*;
+use nih_plug_vizia::vizia::vg;
+
+use std::sync::{Arc, Mutex};
+
+pub struct WaveGraph {
+    samples: Arc<Mutex<Vec<f32>>>,
+}
+
+impl WaveGraph {
+    pub fn new<LVec>(cx: &mut Context, samples: LVec) -> Handle<Self>
+    where
+        LVec: Lens<Target = Arc<Mutex<Vec<f32>>>>,
+    {
+        Self {
+            samples: samples.get(cx),
+        }
+        .build(cx, |_cx| ())
+    }
+}
+
+impl View for WaveGraph {
+    fn element(&self) -> Option<&'static str> {
+        Some("wave-graph")
+    }
+
+    fn draw(&self, cx: &mut DrawContext, canvas: &mut Canvas) {
+        let bounds = cx.bounds();
+
+        if bounds.w == 0.0 || bounds.h == 0.0 {
+            return;
+        }
+
+        let samples = self.samples.lock().unwrap();
+
+        let line_width = cx.style.dpi_factor as f32 * 1.5;
+        let paint = vg::Paint::color(cx.font_color().cloned().unwrap_or_default().into())
+            .with_line_width(line_width);
+
+        let mut path = vg::Path::new();
+
+        let sample_width = bounds.w / samples.len() as f32;
+
+        // x,y is top left
+        // start with the first sample
+        path.move_to(bounds.x, bounds.y + bounds.h - (samples[0] * bounds.h));
+
+        for n in 1..samples.len() {
+            let x_offset = sample_width * n as f32; 
+            let y_offset = bounds.h * samples[n]; 
+
+            path.line_to(bounds.x + x_offset, bounds.y + bounds.h - y_offset);
+        }
+
+        canvas.stroke_path(&mut path, &paint);
+    }
+}

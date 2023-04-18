@@ -14,6 +14,7 @@ pub struct Synth {
     voices: HashMap<u8, Voice>,
     plugin_params: Arc<SynthTwoParams>,
     envelope: Arc<Mutex<Vec<f32>>>,
+    graph_samples: Arc<Mutex<Vec<f32>>>,
 }
 
 impl Synth {
@@ -24,6 +25,7 @@ impl Synth {
             // This seems dumb
             plugin_params: Arc::new(SynthTwoParams::default()),
             envelope: Arc::new(Mutex::new(vec![])),
+            graph_samples: Arc::new(Mutex::new(vec![])),
         }
     }
     pub fn initialize(
@@ -31,10 +33,12 @@ impl Synth {
         plugin_params: Arc<SynthTwoParams>,
         sample_rate: f64,
         envelope: Arc<Mutex<Vec<f32>>>,
+        graph_samples: Arc<Mutex<Vec<f32>>>,
     ) {
         self.sample_rate = sample_rate;
         self.plugin_params = plugin_params;
         self.envelope = envelope;
+        self.graph_samples = graph_samples;
     }
 
     // we're doing fake stereo at first
@@ -45,7 +49,6 @@ impl Synth {
         }
 
         // update graph data.
-        // maybe should do this somewhere else?
         let mut env = self.envelope.lock().unwrap();
         env[0] = self.plugin_params.attack.smoothed.next();
         env[1] = self.plugin_params.decay.smoothed.next();
