@@ -46,15 +46,11 @@ impl Synth {
 
         // update graph data.
         // maybe should do this somewhere else?
-        let a = self.plugin_params.attack.smoothed.next();
-        let d = self.plugin_params.decay.smoothed.next();
-        let s = self.plugin_params.sustain.smoothed.next();
-        let r = self.plugin_params.release.smoothed.next();
         let mut env = self.envelope.lock().unwrap();
-        env[0] = a;
-        env[1] = d;
-        env[2] = s;
-        env[3] = r;
+        env[0] = self.plugin_params.attack.smoothed.next();
+        env[1] = self.plugin_params.decay.smoothed.next();
+        env[2] = self.plugin_params.sustain.smoothed.next();
+        env[3] = self.plugin_params.release.smoothed.next();
 
         out
     }

@@ -324,10 +324,8 @@ impl Plugin for SynthTwo {
         _aux: &mut AuxiliaryBuffers,
         context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
-        // with vst3/nih we handle the midi events and audio processing both in this function
         let mut next_event = context.next_event();
 
-        // interesting to do this here rather than inside the synth stuff
         for channel_samples in buffer.iter_samples() {
             // process midi events
             while let Some(event) = next_event {
@@ -347,7 +345,6 @@ impl Plugin for SynthTwo {
             let gain = self.params.gain.smoothed.next();
 
             for sample in channel_samples {
-                // why is buffer f32?
                 *sample = self.synth.process_sample() as f32 * gain;
             }
 
