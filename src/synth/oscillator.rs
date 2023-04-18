@@ -17,7 +17,6 @@ pub trait Oscillator {
     fn process(&self, time: f64) -> f64;
 }
 
-
 #[derive(RustEmbed)]
 #[folder = "waves"]
 #[include = "*.json"]

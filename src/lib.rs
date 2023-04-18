@@ -1,6 +1,6 @@
 use nih_plug::prelude::*;
 use nih_plug_vizia::ViziaState;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 #[macro_use]
 extern crate lazy_static;
@@ -12,6 +12,10 @@ mod editor;
 
 struct SynthTwo {
     params: Arc<SynthTwoParams>,
+
+    // data that we use to draw graphs in the editor
+    envelope: Arc<Mutex<Vec<f32>>>,
+
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
     // but I don't really want to do that
@@ -80,8 +84,16 @@ pub struct SynthTwoParams {
 
 impl Default for SynthTwo {
     fn default() -> Self {
+        let params = Arc::new(SynthTwoParams::default());
+        let envelope = Arc::new(Mutex::new(vec![
+            params.attack.default_plain_value(),
+            params.decay.default_plain_value(),
+            params.sustain.default_plain_value(),
+            params.release.default_plain_value(),
+        ]));
         Self {
-            params: Arc::new(SynthTwoParams::default()),
+            params,
+            envelope,
             editor_state: editor::default_state(),
             synth: Synth::default(),
         }
@@ -277,7 +289,11 @@ impl Plugin for SynthTwo {
     }
 
     fn editor(&self, _async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
-        editor::create(self.params.clone(), self.editor_state.clone())
+        let data = editor::Data {
+            params: self.params.clone(),
+            envelope: self.envelope.clone(),
+        };
+        editor::create(data, self.editor_state.clone())
     }
 
     fn initialize(
@@ -286,8 +302,11 @@ impl Plugin for SynthTwo {
         buffer_config: &BufferConfig,
         _context: &mut impl InitContext<Self>,
     ) -> bool {
-        self.synth
-            .initialize(self.params.clone(), buffer_config.sample_rate.into());
+        self.synth.initialize(
+            self.params.clone(),
+            buffer_config.sample_rate.into(),
+            self.envelope.clone(),
+        );
 
         // Resize buffers and perform other potentially expensive initialization operations here.
         // The `reset()` function is always called right after this function. You can remove this

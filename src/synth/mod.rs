@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 mod voice;
 use voice::Voice;
@@ -13,6 +13,7 @@ pub struct Synth {
     sample_rate: f64,
     voices: HashMap<u8, Voice>,
     plugin_params: Arc<SynthTwoParams>,
+    envelope: Arc<Mutex<Vec<f32>>>,
 }
 
 impl Synth {
@@ -22,11 +23,18 @@ impl Synth {
             voices: HashMap::new(),
             // This seems dumb
             plugin_params: Arc::new(SynthTwoParams::default()),
+            envelope: Arc::new(Mutex::new(vec![])),
         }
     }
-    pub fn initialize(&mut self, plugin_params: Arc<SynthTwoParams>, sample_rate: f64) {
+    pub fn initialize(
+        &mut self,
+        plugin_params: Arc<SynthTwoParams>,
+        sample_rate: f64,
+        envelope: Arc<Mutex<Vec<f32>>>,
+    ) {
         self.sample_rate = sample_rate;
         self.plugin_params = plugin_params;
+        self.envelope = envelope;
     }
 
     // we're doing fake stereo at first
@@ -35,6 +43,19 @@ impl Synth {
         for (_, voice) in self.voices.iter_mut() {
             out += voice.process();
         }
+
+        // update graph data.
+        // maybe should do this somewhere else?
+        let a = self.plugin_params.attack.smoothed.next();
+        let d = self.plugin_params.decay.smoothed.next();
+        let s = self.plugin_params.sustain.smoothed.next();
+        let r = self.plugin_params.release.smoothed.next();
+        let mut env = self.envelope.lock().unwrap();
+        env[0] = a;
+        env[1] = d;
+        env[2] = s;
+        env[3] = r;
+
         out
     }
 
