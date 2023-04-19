@@ -5,11 +5,14 @@ use crate::synth::envelope::{Envelope, ADSR};
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
 use crate::SynthTwoParams;
 
-fn midi_note_to_freq(note: u8) -> f64 {
+fn midi_note_to_freq(note: u8, tune: f64, tune_fine: f64) -> f64 {
     const A4_PITCH: i8 = 69;
     const A4_FREQ: f64 = 440.0;
 
-    ((f64::from(note as i8 - A4_PITCH)) / 12.0).exp2() * A4_FREQ
+    let pitch_tweak = 12 * tune as i8;
+    //let pitch_tweak = 0;
+
+    ((f64::from(note as i8 - A4_PITCH + pitch_tweak) / 12.0).exp2() * A4_FREQ) + tune_fine
 }
 
 pub struct Voice {
@@ -41,7 +44,12 @@ impl Voice {
         time_per_sample: f64,
         plugin_params: Arc<SynthTwoParams>,
     ) -> Self {
-        let frequency = midi_note_to_freq(note);
+        let frequency1 = midi_note_to_freq(note,
+                                           plugin_params.tuning_1.value().into(),
+                                           plugin_params.tuning_fine_1.value().into());
+        let frequency2 = midi_note_to_freq(note, 
+                                           plugin_params.tuning_2.value().into(),
+                                           plugin_params.tuning_fine_2.value().into());
 
         Self {
             velocity,
@@ -50,8 +58,8 @@ impl Voice {
             finished: false,
             time_per_sample,
             plugin_params,
-            oscillator1: WaveTableOscillator::new(frequency, time_per_sample),
-            oscillator2: WaveTableOscillator::new(frequency, time_per_sample),
+            oscillator1: WaveTableOscillator::new(frequency1, time_per_sample),
+            oscillator2: WaveTableOscillator::new(frequency2, time_per_sample),
             main_envelope: ADSR::default(),
             warp_envelope_1: ADSR::default(),
             warp_envelope_2: ADSR::default(),
@@ -123,4 +131,6 @@ impl Voice {
 
         out
     }
+
+
 }

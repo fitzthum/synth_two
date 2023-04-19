@@ -81,6 +81,19 @@ pub struct SynthTwoParams {
 
     #[id = "oscillator-balance"]
     pub oscillator_balance: FloatParam,
+
+    #[id = "tuning-1"]
+    pub tuning_1: FloatParam,
+
+    #[id = "tuning-fine-1"]
+    pub tuning_fine_1: FloatParam,
+
+    #[id = "tuning-2"]
+    pub tuning_2: FloatParam,
+
+    #[id = "tuning-fine-2"]
+    pub tuning_fine_2: FloatParam,
+
 }
 
 impl Default for SynthTwo {
@@ -248,6 +261,32 @@ impl Default for SynthTwoParams {
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            // tuning 
+            tuning_1: FloatParam::new(
+                "Oscillator 1 Tuning",
+                0.0,
+                FloatRange::Linear { min: -3.0, max: 3.0 },
+            ),
+
+            tuning_fine_1: FloatParam::new(
+                "Oscillator 1 Fine Tuning",
+                0.0,
+                FloatRange::Linear { min: -10.0, max: 10.0 },
+            ),
+
+            tuning_2: FloatParam::new(
+                "Oscillator 2 Tuning",
+                0.0,
+                FloatRange::Linear { min: -3.0, max: 3.0 },
+            ),
+
+            tuning_fine_2: FloatParam::new(
+                "Oscillator 2 Fine Tuning",
+                0.0,
+                FloatRange::Linear { min: -10.0, max: 10.0 },
+            ),
+
         }
     }
 }

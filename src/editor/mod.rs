@@ -117,6 +117,8 @@ fn oscillator1(cx: &mut Context) {
                 Some("Index"),
             );
             ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1, Some("Warp"));
+            ParamKnob::new(cx, Data::params, |params| &params.tuning_1, Some("Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.tuning_fine_1, Some("Fine Tune"));
         })
         .class("row");
 
@@ -145,6 +147,9 @@ fn oscillator2(cx: &mut Context) {
                 Some("Index"),
             );
             ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2, Some("Warp"));
+            ParamKnob::new(cx, Data::params, |params| &params.tuning_2, Some("Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.tuning_fine_2, Some("Fine Tune"));
+
         })
         .class("row");
 
