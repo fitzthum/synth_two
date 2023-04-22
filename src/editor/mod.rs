@@ -25,7 +25,7 @@ impl Model for Data {}
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-    ViziaState::new(|| (1000, 510))
+    ViziaState::new(|| (1000, 710))
 }
 
 pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dyn Editor>> {
@@ -40,22 +40,26 @@ pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dy
         ResizeHandle::new(cx);
 
         VStack::new(cx, |cx| {
-            top(cx);
+            general(cx);
             oscillators(cx);
-        });
+            effects(cx);
+        })
+        .child_bottom(Stretch(1.0))
+        .child_right(Stretch(1.0));
     })
 }
 
-// Top half of editor, stores global params
-fn top(cx: &mut Context) {
+// Some overall parameters
+fn general(cx: &mut Context) {
     HStack::new(cx, |cx| {
-        top_left(cx);
-        top_right(cx);
+        global_controls(cx);
+        envelope(cx);
+        output(cx);
     })
     .class("top");
 }
 
-fn top_left(cx: &mut Context) {
+fn global_controls(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "General").class("section-title");
         // Main controls
@@ -68,14 +72,13 @@ fn top_left(cx: &mut Context) {
                 Some("Balance"),
             );
             ParamKnob::new(cx, Data::params, |params| &params.analog, None);
-            WaveGraph::new(cx, Data::graph_samples).class("graph");
         })
         .class("row");
     })
-    .class("quarter");
+    .class("section");
 }
 
-fn top_right(cx: &mut Context) {
+fn envelope(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Envelope").class("section-title");
         // ADSR
@@ -91,7 +94,17 @@ fn top_right(cx: &mut Context) {
 
         // ADSR Graph goes here
     })
-    .class("quarter");
+    .class("section");
+}
+
+fn output(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Output").class("section-title");
+        WaveGraph::new(cx, Data::graph_samples).class("graph");
+    })
+    .class("section")
+    .child_right(Stretch(1.0));
+
 }
 
 fn oscillators(cx: &mut Context) {
@@ -99,7 +112,6 @@ fn oscillators(cx: &mut Context) {
         oscillator1(cx);
         oscillator2(cx);
     })
-    .position_type(PositionType::SelfDirected)
     .id("oscillators");
 }
 
@@ -132,7 +144,7 @@ fn oscillator1(cx: &mut Context) {
         })
         .class("row");
     })
-    .class("quarter");
+    .class("section");
 }
 
 fn oscillator2(cx: &mut Context) {
@@ -163,5 +175,28 @@ fn oscillator2(cx: &mut Context) {
         })
         .class("row");
     })
-    .class("quarter");
+    .class("section");
 }
+
+fn effects(cx: &mut Context) {
+    HStack::new(cx, |cx| {
+        filter(cx);
+    })
+    .id("effects");
+}
+
+fn filter(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Filter").class("section-title");
+
+        // wave controls
+        HStack::new(cx, |cx| { 
+            ParamKnob::new(cx, Data::params, |params| &params.filter_cutoff, Some("Cutoff"));
+        });
+    })
+    .class("section")
+    .right(Stretch(1.0));
+ 
+}
+
+

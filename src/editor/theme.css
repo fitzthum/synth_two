@@ -11,34 +11,30 @@
 
 label {
 		height:30px;
-		width:100px;
+		width:60px;
 		child-space: 1s;
 }
 
 
-.quarter {
+.section {
 		background-color: #1F1F1F;
 		border-radius: 4px;
 		border-color: black;
 		border-width: 3px;
-		top:10px;
-		left:10px;
-		width:20px;
-		height:100px;
-		column-gap:20px;
+		left:5px;
+		right:5px;
+		top:5px;
+		bottom:5px;
+		
 
 }
 
 .top .quarter {
-		height:100px;
 }
 
 .envelope {
 	bottom:20px;
 
-}
-#oscillators {
-	top:166px;
 }
 
 .section-title {
@@ -53,8 +49,6 @@ label {
 knob {
 	height:40px;
 	width:40px;
-	left:1s;
-	right:1s;
 }
 
 knob .track {

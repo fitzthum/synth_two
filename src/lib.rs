@@ -98,6 +98,9 @@ pub struct SynthTwoParams {
     #[id = "analog"]
     pub analog: FloatParam,
 
+    #[id = "filter-cutoff"]
+    pub filter_cutoff: FloatParam,
+
 }
 
 impl Default for SynthTwo {
@@ -297,6 +300,13 @@ impl Default for SynthTwoParams {
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             ),
+
+            filter_cutoff: FloatParam::new(
+                "Filter Cutoff",
+                1.0,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            ),
+
 
         }
     }
