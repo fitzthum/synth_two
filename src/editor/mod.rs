@@ -67,6 +67,7 @@ fn top_left(cx: &mut Context) {
                 |params| &params.oscillator_balance,
                 Some("Balance"),
             );
+            ParamKnob::new(cx, Data::params, |params| &params.analog, None);
             WaveGraph::new(cx, Data::graph_samples).class("graph");
         })
         .class("row");

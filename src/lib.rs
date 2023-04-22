@@ -94,6 +94,10 @@ pub struct SynthTwoParams {
     #[id = "tuning-fine-2"]
     pub tuning_fine_2: FloatParam,
 
+    // Analog/humanization factor
+    #[id = "analog"]
+    pub analog: FloatParam,
+
 }
 
 impl Default for SynthTwo {
@@ -285,6 +289,13 @@ impl Default for SynthTwoParams {
                 "Oscillator 2 Fine Tuning",
                 0.0,
                 FloatRange::Linear { min: -10.0, max: 10.0 },
+            ),
+
+            // Analog
+            analog: FloatParam::new(
+                "Analog",
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
             ),
 
         }
