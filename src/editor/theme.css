@@ -56,12 +56,6 @@ knob .track {
 }
 
 .graph {
-	height:50px;
-	width:100px;
-	right:10px;
-	border-radius: 4px;
-	border-color: #47B8C2;
-	border-width: 3px;
 	color: #47B8C2;
 
 }

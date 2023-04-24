@@ -15,7 +15,11 @@ struct SynthTwo {
 
     // data that we use to draw graphs in the editor
     envelope: Arc<Mutex<Vec<f32>>>,
+
+    // shared between the synth and the editor.
+    // stored here for convenience.
     graph_samples: Arc<Mutex<Vec<f32>>>,
+    spectrum_samples: Arc<Mutex<Vec<f32>>>,
 
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
@@ -101,6 +105,10 @@ pub struct SynthTwoParams {
     #[id = "filter-cutoff"]
     pub filter_cutoff: FloatParam,
 
+    #[id = "filter-q"]
+    pub filter_q: FloatParam,
+
+
 }
 
 impl Default for SynthTwo {
@@ -116,6 +124,7 @@ impl Default for SynthTwo {
             params,
             envelope,
             graph_samples: Arc::new(Mutex::new(vec![])),
+            spectrum_samples: Arc::new(Mutex::new(vec![])),
             editor_state: editor::default_state(),
             synth: Synth::default(),
         }
@@ -303,9 +312,19 @@ impl Default for SynthTwoParams {
 
             filter_cutoff: FloatParam::new(
                 "Filter Cutoff",
-                1.0,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
-            ),
+                10000.0,
+                FloatRange::Skewed { min: 20.0, max: 18000.0, factor: FloatRange::skew_factor(-1.0), },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+
+            filter_q: FloatParam::new(
+                "Filter Q",
+                2.0f32.sqrt(),
+                FloatRange::Skewed { min: 2.0f32.sqrt() / 2.0, max: 10.0, factor: FloatRange::skew_factor(-1.0), },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+
+
 
 
         }
@@ -338,7 +357,7 @@ impl Plugin for SynthTwo {
     const SAMPLE_ACCURATE_AUTOMATION: bool = true;
 
     // If the plugin can send or receive SysEx messages, it can define a type to wrap around those
-    // messages here. The type implements the `SysExMessage` trait, which allows conversion to and
+   // messages here. The type implements the `SysExMessage` trait, which allows conversion to and
     // from plain byte buffers.
     type SysExMessage = ();
     // More advanced plugins can use this to run expensive background tasks. See the field's
@@ -355,6 +374,7 @@ impl Plugin for SynthTwo {
             params: self.params.clone(),
             envelope: self.envelope.clone(),
             graph_samples: self.graph_samples.clone(),
+            spectrum_samples: self.spectrum_samples.clone(),
         };
         editor::create(data, self.editor_state.clone())
     }
@@ -370,6 +390,7 @@ impl Plugin for SynthTwo {
             buffer_config.sample_rate.into(),
             self.envelope.clone(),
             self.graph_samples.clone(),
+            self.spectrum_samples.clone(),
         );
 
         // Resize buffers and perform other potentially expensive initialization operations here.
@@ -410,7 +431,7 @@ impl Plugin for SynthTwo {
             // Smoothing is optionally built into the parameters themselves
             let gain = self.params.gain.smoothed.next();
 
-            let output_sample = self.synth.process_sample() as f32;
+            let output_sample = self.synth.process_sample();
 
             for sample in channel_samples {
                 *sample = output_sample * gain; 
@@ -426,6 +447,8 @@ impl Plugin for SynthTwo {
 
         // push the samples to the mutex
         *self.graph_samples.lock().unwrap() = graph_samples;
+        
+        self.synth.spectrum_calculator.process(buffer);
 
 
         ProcessStatus::Normal

@@ -14,11 +14,15 @@ use envelope::EnvelopeGraph;
 mod wave;
 use wave::WaveGraph;
 
+mod spectrum;
+use spectrum::SpectrumGraph;
+
 #[derive(Lens, Clone)]
 pub struct Data {
     pub params: Arc<SynthTwoParams>,
     pub envelope: Arc<Mutex<Vec<f32>>>,
     pub graph_samples: Arc<Mutex<Vec<f32>>>,
+    pub spectrum_samples: Arc<Mutex<Vec<f32>>>,
 }
 
 impl Model for Data {}
@@ -43,6 +47,7 @@ pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dy
             general(cx);
             oscillators(cx);
             effects(cx);
+            output(cx);
         })
         .child_bottom(Stretch(1.0))
         .child_right(Stretch(1.0));
@@ -54,7 +59,6 @@ fn general(cx: &mut Context) {
     HStack::new(cx, |cx| {
         global_controls(cx);
         envelope(cx);
-        output(cx);
     })
     .class("top");
 }
@@ -98,13 +102,20 @@ fn envelope(cx: &mut Context) {
 }
 
 fn output(cx: &mut Context) {
-    VStack::new(cx, |cx| {
-        Label::new(cx, "Output").class("section-title");
-        WaveGraph::new(cx, Data::graph_samples).class("graph");
-    })
-    .class("section")
-    .child_right(Stretch(1.0));
-
+    HStack::new(cx, |cx| {
+        VStack::new(cx, |cx| {
+            Label::new(cx, "Output").class("section-title");
+            HStack::new(cx, |cx| {
+                VStack::new(cx, |cx| {
+                    WaveGraph::new(cx, Data::graph_samples).class("graph");
+                }).width(Pixels(100.0)).height(Pixels(100.0));
+                VStack::new(cx, |cx| {
+                    SpectrumGraph::new(cx, Data::spectrum_samples).class("graph");
+                }).width(Pixels(100.0)).left(Pixels(120.0));
+            }).class("row").row_between(Pixels(20.0));
+        })
+        .class("section");
+    });
 }
 
 fn oscillators(cx: &mut Context) {
@@ -189,10 +200,10 @@ fn filter(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Filter").class("section-title");
 
-        // wave controls
         HStack::new(cx, |cx| { 
             ParamKnob::new(cx, Data::params, |params| &params.filter_cutoff, Some("Cutoff"));
-        });
+            ParamKnob::new(cx, Data::params, |params| &params.filter_q, Some("Q"));
+        }).class("row");
     })
     .class("section")
     .right(Stretch(1.0));
