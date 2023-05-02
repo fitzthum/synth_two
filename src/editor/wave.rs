@@ -31,6 +31,9 @@ impl View for WaveGraph {
             return;
         }
 
+        let amplitude = bounds.h / 2.0;
+        let middle_offset = bounds.y + amplitude;
+
         let samples = self.samples.lock().unwrap();
 
         let line_width = cx.style.dpi_factor as f32 * 1.5;
@@ -43,13 +46,13 @@ impl View for WaveGraph {
 
         // x,y is top left
         // start with the first sample
-        path.move_to(bounds.x, bounds.y + bounds.h - (samples[0] * bounds.h));
+        path.move_to(bounds.x, middle_offset - (samples[0] * amplitude));
 
         for n in 1..samples.len() {
             let x_offset = sample_width * n as f32; 
-            let y_offset = bounds.h * samples[n]; 
+            let y_offset = amplitude * samples[n]; 
 
-            path.line_to(bounds.x + x_offset, bounds.y + bounds.h - y_offset);
+            path.line_to(bounds.x + x_offset, middle_offset - y_offset);
         }
 
         canvas.stroke_path(&mut path, &paint);
