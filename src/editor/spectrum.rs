@@ -50,7 +50,7 @@ impl View for SpectrumGraph {
 
         for n in 0..bins.len() {
             // draw rect from upper left
-            let h = SCALE_FACTOR * bounds.h * bins[n]; 
+            let h = (SCALE_FACTOR * bounds.h * bins[n]).min(bounds.h);
             let x = w * n as f32; 
             let y = bounds.y + bounds.h - h;
 
