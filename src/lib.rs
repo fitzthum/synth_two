@@ -28,6 +28,14 @@ struct SynthTwo {
     synth: Synth,
 }
 
+#[derive(Enum, Debug, PartialEq)]
+pub enum LfoConnection {
+    #[id = "none"]
+    NoLfo,
+    #[id = "LFO1"]
+    Lfo1,
+}
+
 #[derive(Params)]
 pub struct SynthTwoParams {
     #[id = "gain"]
@@ -107,6 +115,9 @@ pub struct SynthTwoParams {
 
     #[id = "filter-q"]
     pub filter_q: FloatParam,
+
+    #[id = "filter-lfo"]
+    pub filter_lfo: EnumParam<LfoConnection>,
 
     #[id = "lfo1-period"]
     pub lfo1_period: FloatParam,
@@ -326,6 +337,8 @@ impl Default for SynthTwoParams {
                 FloatRange::Skewed { min: 2.0f32.sqrt() / 2.0, max: 10.0, factor: FloatRange::skew_factor(-1.0), },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+
+            filter_lfo: EnumParam::new("Filter LFO", LfoConnection::NoLfo),
 
             lfo1_period: FloatParam::new(
                 "LFO1 Period",
