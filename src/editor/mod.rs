@@ -194,6 +194,7 @@ fn oscillator2(cx: &mut Context) {
 fn effects(cx: &mut Context) {
     HStack::new(cx, |cx| {
         filter(cx);
+        lfo1(cx);
     })
     .id("effects");
 }
@@ -212,4 +213,15 @@ fn filter(cx: &mut Context) {
  
 }
 
+fn lfo1(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "LFO1").class("section-title");
 
+        HStack::new(cx, |cx| { 
+            ParamKnob::new(cx, Data::params, |params| &params.lfo1_period, Some("Period"));
+        }).class("row");
+    })
+    .class("section")
+    .right(Stretch(1.0));
+ 
+}

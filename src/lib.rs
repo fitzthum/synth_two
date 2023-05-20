@@ -108,6 +108,9 @@ pub struct SynthTwoParams {
     #[id = "filter-q"]
     pub filter_q: FloatParam,
 
+    #[id = "lfo1-period"]
+    pub lfo1_period: FloatParam,
+
 
 }
 
@@ -324,7 +327,13 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 
-
+            lfo1_period: FloatParam::new(
+                "LFO1 Period",
+                1.0,
+                FloatRange::Linear { min: 0.1, max: 20.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
 
         }
