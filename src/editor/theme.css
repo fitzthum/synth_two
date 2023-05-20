@@ -64,5 +64,6 @@ knob .track {
 		background-color: #080808;
 		left:5px;
 		right:5px;
+		overflow:hidden;
 
 }
