@@ -29,9 +29,6 @@ label {
 
 }
 
-.top .quarter {
-}
-
 .envelope {
 	bottom:20px;
 
@@ -57,5 +54,15 @@ knob .track {
 
 .graph {
 	color: #47B8C2;
+
+}
+
+.graph-wrapper {
+		height: 100px;
+		width: 100px;
+		border-radius:6px;
+		background-color: #080808;
+		left:5px;
+		right:5px;
 
 }

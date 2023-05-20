@@ -92,7 +92,9 @@ fn envelope(cx: &mut Context) {
             ParamKnob::new(cx, Data::params, |params| &params.sustain, Some("S"));
             ParamKnob::new(cx, Data::params, |params| &params.release, Some("R"));
             // need to make lens for adsr
-            EnvelopeGraph::new(cx, Data::envelope).class("graph");
+            VStack::new(cx, |cx| {
+                EnvelopeGraph::new(cx, Data::envelope).class("graph");
+            }).class("graph-wrapper").height(Pixels(40.0)).width(Pixels(80.0)).top(Pixels(20.0));
         })
         .class("row");
 
@@ -108,10 +110,10 @@ fn output(cx: &mut Context) {
             HStack::new(cx, |cx| {
                 VStack::new(cx, |cx| {
                     WaveGraph::new(cx, Data::graph_samples).class("graph");
-                }).width(Pixels(100.0)).height(Pixels(100.0));
+                }).class("graph-wrapper");
                 VStack::new(cx, |cx| {
                     SpectrumGraph::new(cx, Data::spectrum_samples).class("graph");
-                }).width(Pixels(100.0)).left(Pixels(120.0));
+                }).class("graph-wrapper");
             }).class("row").row_between(Pixels(20.0));
         })
         .class("section");
