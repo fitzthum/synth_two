@@ -13,18 +13,24 @@ use filter::{Biquad, BiquadCoefficients};
 pub mod spectrum;
 use spectrum::SpectrumCalculator;
 
+mod lfo;
+use lfo::{Lfo, WaveTableLfo};
+
 use crate::SynthTwoParams;
 
 pub struct Synth {
     sample_rate: f64,
     voices: HashMap<u8, Voice>,
     pub spectrum_calculator: SpectrumCalculator,
+
     plugin_params: Arc<SynthTwoParams>,
 
     // these are for the graphs
     envelope: Arc<Mutex<Vec<f32>>>,
     graph_samples: Arc<Mutex<Vec<f32>>>,
+
     filter: Biquad<f32>,
+    lfo1: Option<WaveTableLfo>,
 }
 
 impl Synth {
@@ -37,7 +43,9 @@ impl Synth {
             plugin_params: Arc::new(SynthTwoParams::default()),
             envelope: Arc::new(Mutex::new(vec![])),
             graph_samples: Arc::new(Mutex::new(vec![])),
+
             filter: Biquad::default(),
+            lfo1: None,
         }
     }
     pub fn initialize(
@@ -56,6 +64,9 @@ impl Synth {
         
         // initialize filter from params that we just updated
         self.update_filter();
+
+        let lfo1_period = self.plugin_params.lfo1_period.smoothed.next();
+        self.lfo1 = Some(WaveTableLfo::new(self.sample_rate, lfo1_period));
     }
 
     // we're doing fake stereo at first
@@ -73,7 +84,7 @@ impl Synth {
     // any components that need some re-initialization based on param changes
     fn update_components(&mut self) {
 
-        // only update if things have changed
+        // Filter Parameters
         if self.plugin_params.filter_cutoff.smoothed.is_smoothing() || 
             self.plugin_params.filter_q.smoothed.is_smoothing() {
 
@@ -81,6 +92,7 @@ impl Synth {
 
         }
 
+        // Envelope Parameters
         if self.plugin_params.attack.smoothed.is_smoothing() ||
             self.plugin_params.decay.smoothed.is_smoothing() ||
             self.plugin_params.sustain.smoothed.is_smoothing() ||
@@ -91,6 +103,12 @@ impl Synth {
             env[1] = self.plugin_params.decay.smoothed.next();
             env[2] = self.plugin_params.sustain.smoothed.next();
             env[3] = self.plugin_params.release.smoothed.next();
+        }
+
+        // LFO1 Parameters
+        if self.plugin_params.lfo1_period.smoothed.is_smoothing() {
+            self.lfo1.as_mut().unwrap().set_period(self.plugin_params.lfo1_period.smoothed.next());
+
         }
     }
 
