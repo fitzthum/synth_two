@@ -107,8 +107,8 @@ impl Voice {
         if balance_lfo_strength > 0.0 {
             // the lfo uses the global clock.
             balance += self.lfo1.lock().unwrap().amplitude() * balance_lfo_strength;
-            balance = balance.min(1.0).max(0.0); 
         }
+        balance = balance.min(1.0).max(0.0);
         
         let ob = (o2 * balance) + (o1 * (1.0 - balance));
 
