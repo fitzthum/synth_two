@@ -53,7 +53,7 @@ impl Lfo for WaveTableLfo {
         //
         // the frequency is 1/period
         let frequency = 1.0 / period;
-        self.oscillator.update_frequency(frequency.into());
+        self.oscillator.set_frequency(frequency.into());
         
         // samples_per_cycle = period * sample_rate
         self.samples_per_cycle = (period as f64 * self.sample_rate) as u64;
