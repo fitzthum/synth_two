@@ -206,6 +206,7 @@ fn filter(cx: &mut Context) {
         HStack::new(cx, |cx| { 
             ParamKnob::new(cx, Data::params, |params| &params.filter_cutoff, Some("Cutoff"));
             ParamKnob::new(cx, Data::params, |params| &params.filter_q, Some("Q"));
+            ParamKnob::new(cx, Data::params, |params| &params.filter_lfo_strength, Some("LFO"));
         }).class("row");
     })
     .class("section")

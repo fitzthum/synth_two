@@ -83,10 +83,14 @@ impl Synth {
 
     // any components that need some re-initialization based on param changes
     fn update_components(&mut self) {
+        if let Some(lfo1) = self.lfo1.as_mut() {
+            lfo1.tick();
+        }
 
         // Filter Parameters
         if self.plugin_params.filter_cutoff.smoothed.is_smoothing() || 
-            self.plugin_params.filter_q.smoothed.is_smoothing() {
+            self.plugin_params.filter_q.smoothed.is_smoothing() ||
+            self.plugin_params.filter_lfo_strength.smoothed.next() > 0.0 {
 
             self.update_filter();
 
@@ -107,14 +111,25 @@ impl Synth {
 
         // LFO1 Parameters
         if self.plugin_params.lfo1_period.smoothed.is_smoothing() {
-            self.lfo1.as_mut().unwrap().set_period(self.plugin_params.lfo1_period.smoothed.next());
+            if let Some(lfo1) = self.lfo1.as_mut() {
+                lfo1.set_period(self.plugin_params.lfo1_period.smoothed.next());
+            }
 
         }
     }
 
     fn update_filter(&mut self) {
-        let cutoff = self.plugin_params.filter_cutoff.smoothed.next();
+        let mut cutoff = self.plugin_params.filter_cutoff.smoothed.next();
         let q = self.plugin_params.filter_q.smoothed.next();
+
+        // handle lfo here
+        // will make the case for calling this function more complicated
+        // but we don't hvae to pass the lfo to the filter
+
+        let lfo_strength = self.plugin_params.filter_lfo_strength.smoothed.next();
+        if let Some(lfo) = self.lfo1.as_mut() {
+            cutoff += lfo.amplitude() as f32 * lfo_strength;
+        }
 
         let coefficients = BiquadCoefficients::lowpass(self.sample_rate as f32, cutoff, q);
         self.filter.coefficients = coefficients;
