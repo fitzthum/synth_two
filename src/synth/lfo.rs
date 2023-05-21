@@ -34,9 +34,8 @@ impl WaveTableLfo {
             amplitude: None,
             samples,
         }
-
     }
-    
+
     // This is specific to a WaveTable, so it's not in
     // the LFO trait
     pub fn set_index(&mut self, index: f64) {
@@ -60,10 +59,9 @@ impl Lfo for WaveTableLfo {
         // the frequency is 1/period
         let frequency = 1.0 / period;
         self.oscillator.set_frequency(frequency.into());
-        
+
         // samples_per_cycle = period * sample_rate
         self.samples_per_cycle = (period as f64 * self.sample_rate) as u64;
-
     }
 
     fn amplitude(&mut self) -> f64 {
@@ -73,9 +71,9 @@ impl Lfo for WaveTableLfo {
         let time_per_sample = 1.0 / self.sample_rate;
         let time = time_per_sample * self.sample_count as f64;
         let amplitude = self.oscillator.process(time.into());
-        
+
         self.amplitude = Some(amplitude);
-     
+
         amplitude
     }
 

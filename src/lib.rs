@@ -23,6 +23,7 @@ struct SynthTwo {
     // stored here for convenience.
     graph_samples: Arc<Mutex<Vec<f32>>>,
     spectrum_samples: Arc<Mutex<Vec<f32>>>,
+    lfo1_samples: Arc<Mutex<Vec<f32>>>,
 
     // sample code says to put this in the params
     // so that the gui state can be restored automatically
@@ -45,6 +46,7 @@ impl Default for SynthTwo {
             envelope,
             graph_samples: Arc::new(Mutex::new(vec![])),
             spectrum_samples: Arc::new(Mutex::new(vec![])),
+            lfo1_samples: Arc::new(Mutex::new(vec![])),
             editor_state: editor::default_state(),
             synth: Synth::default(),
         }
@@ -77,7 +79,7 @@ impl Plugin for SynthTwo {
     const SAMPLE_ACCURATE_AUTOMATION: bool = true;
 
     // If the plugin can send or receive SysEx messages, it can define a type to wrap around those
-   // messages here. The type implements the `SysExMessage` trait, which allows conversion to and
+    // messages here. The type implements the `SysExMessage` trait, which allows conversion to and
     // from plain byte buffers.
     type SysExMessage = ();
     // More advanced plugins can use this to run expensive background tasks. See the field's
@@ -95,6 +97,7 @@ impl Plugin for SynthTwo {
             envelope: self.envelope.clone(),
             graph_samples: self.graph_samples.clone(),
             spectrum_samples: self.spectrum_samples.clone(),
+            lfo1_samples: self.lfo1_samples.clone(),
         };
         editor::create(data, self.editor_state.clone())
     }
@@ -111,6 +114,7 @@ impl Plugin for SynthTwo {
             self.envelope.clone(),
             self.graph_samples.clone(),
             self.spectrum_samples.clone(),
+            self.lfo1_samples.clone(),
         );
 
         // Resize buffers and perform other potentially expensive initialization operations here.
@@ -132,7 +136,7 @@ impl Plugin for SynthTwo {
         let mut next_event = context.next_event();
 
         const GRAPH_SAMPLE_RATIO: usize = 4;
-        let mut graph_samples = vec![]; 
+        let mut graph_samples = vec![];
         for (n, channel_samples) in buffer.iter_samples().enumerate() {
             // process midi events
             while let Some(event) = next_event {
@@ -154,9 +158,9 @@ impl Plugin for SynthTwo {
             let output_sample = self.synth.process_sample();
 
             for sample in channel_samples {
-                *sample = output_sample * gain; 
+                *sample = output_sample * gain;
             }
-            
+
             if n % GRAPH_SAMPLE_RATIO == 0 {
                 graph_samples.push(output_sample);
             }
@@ -167,9 +171,8 @@ impl Plugin for SynthTwo {
 
         // push the samples to the mutex
         *self.graph_samples.lock().unwrap() = graph_samples;
-        
-        self.synth.spectrum_calculator.process(buffer);
 
+        self.synth.spectrum_calculator.process(buffer);
 
         ProcessStatus::Normal
     }

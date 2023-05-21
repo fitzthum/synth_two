@@ -22,7 +22,6 @@ pub struct SpectrumCalculator {
 
 impl Default for SpectrumCalculator {
     fn default() -> Self {
-
         let mut planner = RealFftPlanner::new();
         let r2c_plan = planner.plan_fft_forward(FFT_WINDOW_SIZE);
         let complex_fft_buffer = r2c_plan.make_output_vec();
@@ -39,13 +38,9 @@ impl Default for SpectrumCalculator {
 impl SpectrumCalculator {
     pub fn set_buffer(&mut self, spectrum_samples: Arc<Mutex<Vec<f32>>>) {
         self.spectrum_samples = spectrum_samples;
-
     }
 
-    pub fn process(
-        &mut self,
-        buffer: &mut Buffer,
-    ) {
+    pub fn process(&mut self, buffer: &mut Buffer) {
         self.stft
             .process_overlap_add(buffer, 1, |_channel_idx, real_fft_buffer| {
                 self.r2c_plan
@@ -55,19 +50,13 @@ impl SpectrumCalculator {
                 let mut spectrum_samples = vec![];
                 let mut sample_count = 0;
 
-                for fft_bin in self
-                    .complex_fft_buffer
-                    .iter_mut()
-                {
+                for fft_bin in self.complex_fft_buffer.iter_mut() {
                     if sample_count < WINDOW_SIZE {
                         spectrum_samples.push(fft_bin.norm() * GAIN_COMPENSATION);
-
                     }
                     sample_count += 1;
-
                 }
                 *self.spectrum_samples.lock().unwrap() = spectrum_samples;
             });
-
     }
 }

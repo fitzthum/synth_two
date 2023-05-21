@@ -53,8 +53,8 @@ impl View for WaveGraph {
         path.move_to(bounds.x, middle_offset - (samples[0] * amplitude));
 
         for n in 1..samples.len() {
-            let x_offset = sample_width * n as f32; 
-            let y_offset = amplitude * samples[n]; 
+            let x_offset = sample_width * n as f32;
+            let y_offset = amplitude * samples[n];
 
             path.line_to(bounds.x + x_offset, middle_offset - y_offset);
         }

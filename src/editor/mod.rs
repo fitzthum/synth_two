@@ -95,7 +95,11 @@ fn envelope(cx: &mut Context) {
             // need to make lens for adsr
             VStack::new(cx, |cx| {
                 EnvelopeGraph::new(cx, Data::envelope).class("graph");
-            }).class("graph-wrapper").height(Pixels(40.0)).width(Pixels(80.0)).top(Pixels(20.0));
+            })
+            .class("graph-wrapper")
+            .height(Pixels(40.0))
+            .width(Pixels(80.0))
+            .top(Pixels(20.0));
         })
         .class("row");
 
@@ -111,11 +115,15 @@ fn output(cx: &mut Context) {
             HStack::new(cx, |cx| {
                 VStack::new(cx, |cx| {
                     WaveGraph::new(cx, Data::graph_samples).class("graph");
-                }).class("graph-wrapper");
+                })
+                .class("graph-wrapper");
                 VStack::new(cx, |cx| {
                     SpectrumGraph::new(cx, Data::spectrum_samples).class("graph");
-                }).class("graph-wrapper");
-            }).class("row").row_between(Pixels(20.0));
+                })
+                .class("graph-wrapper");
+            })
+            .class("row")
+            .row_between(Pixels(20.0));
         })
         .class("section");
     });
@@ -143,18 +151,48 @@ fn oscillator1(cx: &mut Context) {
                 |params| &params.osc1_wave_index,
                 Some("Index"),
             );
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_wave_warp, Some("Warp"));
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_wave_warp,
+                Some("Warp"),
+            );
             ParamKnob::new(cx, Data::params, |params| &params.osc1_tuning, Some("Tune"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_tuning_fine, Some("Fine Tune"));
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_tuning_fine,
+                Some("Fine Tune"),
+            );
         })
         .class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_attack, Some("A"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_decay, Some("D"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_sustain, Some("S"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_release, Some("R"));
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_warp_attack,
+                Some("A"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_warp_decay,
+                Some("D"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_warp_sustain,
+                Some("S"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc1_warp_release,
+                Some("R"),
+            );
         })
         .class("row");
     })
@@ -173,19 +211,48 @@ fn oscillator2(cx: &mut Context) {
                 |params| &params.osc2_wave_index,
                 Some("Index"),
             );
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_wave_warp, Some("Warp"));
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_wave_warp,
+                Some("Warp"),
+            );
             ParamKnob::new(cx, Data::params, |params| &params.osc2_tuning, Some("Tune"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_tuning_fine, Some("Fine Tune"));
-
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_tuning_fine,
+                Some("Fine Tune"),
+            );
         })
         .class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_attack, Some("A"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_decay, Some("D"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_sustain, Some("S"));
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_release, Some("R"));
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_warp_attack,
+                Some("A"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_warp_decay,
+                Some("D"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_warp_sustain,
+                Some("S"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.osc2_warp_release,
+                Some("R"),
+            );
         })
         .class("row");
     })
@@ -204,31 +271,46 @@ fn filter(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "Filter").class("section-title");
 
-        HStack::new(cx, |cx| { 
-            ParamKnob::new(cx, Data::params, |params| &params.filter_cutoff, Some("Cutoff"));
+        HStack::new(cx, |cx| {
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.filter_cutoff,
+                Some("Cutoff"),
+            );
             ParamKnob::new(cx, Data::params, |params| &params.filter_q, Some("Q"));
-            ParamKnob::new(cx, Data::params, |params| &params.filter_lfo_strength, Some("LFO"));
-        }).class("row");
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.filter_lfo_strength,
+                Some("LFO"),
+            );
+        })
+        .class("row");
     })
     .class("section")
     .right(Stretch(1.0));
- 
 }
 
 fn lfo1(cx: &mut Context) {
     VStack::new(cx, |cx| {
         Label::new(cx, "LFO1").class("section-title");
 
-        HStack::new(cx, |cx| { 
-            ParamKnob::new(cx, Data::params, |params| &params.lfo1_period, Some("Period"));
+        HStack::new(cx, |cx| {
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.lfo1_period,
+                Some("Period"),
+            );
             ParamKnob::new(cx, Data::params, |params| &params.lfo1_index, Some("Index"));
             VStack::new(cx, |cx| {
                 WaveGraph::new(cx, Data::lfo1_samples).class("graph");
-            }).class("graph-wrapper");
-
-        }).class("row");
+            })
+            .class("graph-wrapper");
+        })
+        .class("row");
     })
     .class("section")
     .right(Stretch(1.0));
- 
 }

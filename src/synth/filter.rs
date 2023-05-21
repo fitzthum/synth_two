@@ -1,4 +1,4 @@
-// Adapted from crisp example by robbert-vdh 
+// Adapted from crisp example by robbert-vdh
 //
 use nih_plug::debug::*;
 use std::f32::consts;

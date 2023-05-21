@@ -104,7 +104,6 @@ pub struct SynthTwoParams {
 
     #[id = "lfo1-index"]
     pub lfo1_index: FloatParam,
-
 }
 
 impl Default for SynthTwoParams {
@@ -126,14 +125,28 @@ impl Default for SynthTwoParams {
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
 
             // Attack
-            attack: FloatParam::new("Attack", 0.01, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0))
-                .with_unit(" seconds"),
+            attack: FloatParam::new(
+                "Attack",
+                0.01,
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             // Decay
-            decay: FloatParam::new("Decay", 0.0, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX  })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0))
-                .with_unit(" seconds"),
+            decay: FloatParam::new(
+                "Decay",
+                0.0,
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             // Sustain
             sustain: FloatParam::new("Sustain", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 })
@@ -141,9 +154,16 @@ impl Default for SynthTwoParams {
                 .with_unit(" percent"),
 
             // Release
-            release: FloatParam::new("Release", 0.01, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0))
-                .with_unit(" seconds"),
+            release: FloatParam::new(
+                "Release",
+                0.01,
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_unit(" seconds"),
 
             // Wave warp stuff or first oscillator
             osc1_wave_index: FloatParam::new(
@@ -167,7 +187,10 @@ impl Default for SynthTwoParams {
             osc1_warp_attack: FloatParam::new(
                 "Oscillator 1 Warp Attack",
                 0.5,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -175,7 +198,10 @@ impl Default for SynthTwoParams {
             osc1_warp_decay: FloatParam::new(
                 "Oscillator 1 Warp Decay",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -191,7 +217,10 @@ impl Default for SynthTwoParams {
             osc1_warp_release: FloatParam::new(
                 "Oscillator 1 Warp Release",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -199,15 +228,20 @@ impl Default for SynthTwoParams {
             osc1_tuning: FloatParam::new(
                 "Oscillator 1 Tuning",
                 0.0,
-                FloatRange::Linear { min: -3.0, max: 3.0 },
+                FloatRange::Linear {
+                    min: -3.0,
+                    max: 3.0,
+                },
             ),
 
             osc1_tuning_fine: FloatParam::new(
                 "Oscillator 1 Fine Tuning",
                 0.0,
-                FloatRange::Linear { min: -10.0, max: 10.0 },
+                FloatRange::Linear {
+                    min: -10.0,
+                    max: 10.0,
+                },
             ),
-
 
             // Wave warp stuff for second oscillator
             osc2_wave_index: FloatParam::new(
@@ -230,7 +264,10 @@ impl Default for SynthTwoParams {
             osc2_warp_attack: FloatParam::new(
                 "Oscillator 2 Warp Attack",
                 0.2,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -238,7 +275,10 @@ impl Default for SynthTwoParams {
             osc2_warp_decay: FloatParam::new(
                 "Oscillator 2 Warp Decay",
                 0.2,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -254,22 +294,31 @@ impl Default for SynthTwoParams {
             osc2_warp_release: FloatParam::new(
                 "Oscillator 2 Warp Release",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
+                FloatRange::Linear {
+                    min: 0.0,
+                    max: ENVELOPE_TIME_MAX,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
-            // tuning 
+            // tuning
             osc2_tuning: FloatParam::new(
                 "Oscillator 2 Tuning",
                 0.0,
-                FloatRange::Linear { min: -3.0, max: 3.0 },
+                FloatRange::Linear {
+                    min: -3.0,
+                    max: 3.0,
+                },
             ),
 
             osc2_tuning_fine: FloatParam::new(
                 "Oscillator 2 Fine Tuning",
                 0.0,
-                FloatRange::Linear { min: -10.0, max: 10.0 },
+                FloatRange::Linear {
+                    min: -10.0,
+                    max: 10.0,
+                },
             ),
 
             // Oscillator Balance
@@ -280,25 +329,28 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-
             // Analog
-            analog: FloatParam::new(
-                "Analog",
-                0.0,
-                FloatRange::Linear { min: 0.0, max: 1.0 },
-            ),
+            analog: FloatParam::new("Analog", 0.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
 
             filter_cutoff: FloatParam::new(
                 "Filter Cutoff",
                 10000.0,
-                FloatRange::Skewed { min: FILTER_CUTOFF_MIN, max: FILTER_CUTOFF_MAX, factor: FloatRange::skew_factor(-1.0), },
+                FloatRange::Skewed {
+                    min: FILTER_CUTOFF_MIN,
+                    max: FILTER_CUTOFF_MAX,
+                    factor: FloatRange::skew_factor(-1.0),
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 
             filter_q: FloatParam::new(
                 "Filter Q",
                 2.0f32.sqrt(),
-                FloatRange::Skewed { min: 2.0f32.sqrt() / 2.0, max: 10.0, factor: FloatRange::skew_factor(-1.0), },
+                FloatRange::Skewed {
+                    min: 2.0f32.sqrt() / 2.0,
+                    max: 10.0,
+                    factor: FloatRange::skew_factor(-1.0),
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 
@@ -307,14 +359,21 @@ impl Default for SynthTwoParams {
             filter_lfo_strength: FloatParam::new(
                 "Filter LFO Strength",
                 0.0,
-                FloatRange::Skewed { min: 0.0, max: 7000.0, factor: FloatRange::skew_factor(-1.0), },
+                FloatRange::Skewed {
+                    min: 0.0,
+                    max: 7000.0,
+                    factor: FloatRange::skew_factor(-1.0),
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 
             lfo1_period: FloatParam::new(
                 "LFO1 Period",
                 1.0,
-                FloatRange::Linear { min: 0.1, max: 20.0 },
+                FloatRange::Linear {
+                    min: 0.1,
+                    max: 20.0,
+                },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -325,9 +384,6 @@ impl Default for SynthTwoParams {
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
-
-
-
         }
     }
 }

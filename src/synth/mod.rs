@@ -16,8 +16,8 @@ use spectrum::SpectrumCalculator;
 mod lfo;
 use lfo::{Lfo, WaveTableLfo};
 
+use crate::params::{FILTER_CUTOFF_MAX, FILTER_CUTOFF_MIN};
 use crate::SynthTwoParams;
-use crate::params::{FILTER_CUTOFF_MIN, FILTER_CUTOFF_MAX};
 
 pub struct Synth {
     sample_rate: f64,
@@ -63,12 +63,16 @@ impl Synth {
         self.envelope = envelope;
         self.graph_samples = graph_samples;
         self.spectrum_calculator.set_buffer(spectrum_samples);
-        
+
         // initialize filter from params that we just updated
         self.update_filter();
 
         let lfo1_period = self.plugin_params.lfo1_period.smoothed.next();
-        self.lfo1 = Some(WaveTableLfo::new(self.sample_rate, lfo1_period, lfo1_samples));
+        self.lfo1 = Some(WaveTableLfo::new(
+            self.sample_rate,
+            lfo1_period,
+            lfo1_samples,
+        ));
     }
 
     // we're doing fake stereo at first
@@ -90,20 +94,19 @@ impl Synth {
         }
 
         // Filter Parameters
-        if self.plugin_params.filter_cutoff.smoothed.is_smoothing() || 
-            self.plugin_params.filter_q.smoothed.is_smoothing() ||
-            self.plugin_params.filter_lfo_strength.smoothed.next() > 0.0 {
-
+        if self.plugin_params.filter_cutoff.smoothed.is_smoothing()
+            || self.plugin_params.filter_q.smoothed.is_smoothing()
+            || self.plugin_params.filter_lfo_strength.smoothed.next() > 0.0
+        {
             self.update_filter();
-
         }
 
         // Envelope Parameters
-        if self.plugin_params.attack.smoothed.is_smoothing() ||
-            self.plugin_params.decay.smoothed.is_smoothing() ||
-            self.plugin_params.sustain.smoothed.is_smoothing() ||
-            self.plugin_params.release.smoothed.is_smoothing() {
-
+        if self.plugin_params.attack.smoothed.is_smoothing()
+            || self.plugin_params.decay.smoothed.is_smoothing()
+            || self.plugin_params.sustain.smoothed.is_smoothing()
+            || self.plugin_params.release.smoothed.is_smoothing()
+        {
             let mut env = self.envelope.lock().unwrap();
             env[0] = self.plugin_params.attack.smoothed.next();
             env[1] = self.plugin_params.decay.smoothed.next();
@@ -124,8 +127,6 @@ impl Synth {
                 lfo1.generate_samples();
             }
         }
-
-
     }
 
     fn update_filter(&mut self) {
@@ -144,7 +145,6 @@ impl Synth {
 
         let coefficients = BiquadCoefficients::lowpass(self.sample_rate as f32, cutoff, q);
         self.filter.coefficients = coefficients;
-
     }
 
     // create a new voice

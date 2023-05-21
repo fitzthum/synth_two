@@ -15,10 +15,7 @@ impl SpectrumGraph {
     where
         LVec: Lens<Target = Arc<Mutex<Vec<f32>>>>,
     {
-        Self {
-            bins: bins.get(cx),
-        }
-        .build(cx, |_cx| ())
+        Self { bins: bins.get(cx) }.build(cx, |_cx| ())
     }
 }
 
@@ -51,10 +48,10 @@ impl View for SpectrumGraph {
         for n in 0..bins.len() {
             // draw rect from upper left
             let h = (SCALE_FACTOR * bounds.h * bins[n]).min(bounds.h);
-            let x = bounds.x + w * n as f32; 
+            let x = bounds.x + w * n as f32;
             let y = bounds.y + bounds.h - h;
 
-            path.rect(x,y,w,h);
+            path.rect(x, y, w, h);
         }
 
         canvas.stroke_path(&mut path, &paint);

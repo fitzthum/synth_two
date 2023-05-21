@@ -72,7 +72,8 @@ impl View for EnvelopeGraph {
         );
 
         // now add on the release time and go to the bottom
-        let r_offset = d_offset_horizontal + section_width + (r / ENVELOPE_TIME_MAX) * section_width;
+        let r_offset =
+            d_offset_horizontal + section_width + (r / ENVELOPE_TIME_MAX) * section_width;
         path.line_to(bounds.x + r_offset, bounds.y + bounds.h);
 
         canvas.stroke_path(&mut path, &paint);

@@ -73,7 +73,6 @@ impl WaveTableOscillator {
     pub fn set_frequency(&mut self, frequency: f64) {
         self.samples_per_cycle = (1.0 / self.time_per_sample) / frequency;
         self.scale_factor = WAVE_TABLE_LENGTH as f64 / self.samples_per_cycle;
-
     }
 
     pub fn set_wave_index(&mut self, wave_index: f64) {

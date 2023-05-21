@@ -1,6 +1,6 @@
 // A voice roughly corresponds to a note
-use std::sync::Arc;
 use rand::Rng;
+use std::sync::Arc;
 
 use crate::synth::envelope::{Envelope, ADSR};
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
@@ -44,21 +44,22 @@ impl Voice {
         time_per_sample: f64,
         plugin_params: Arc<SynthTwoParams>,
     ) -> Self {
-
         let mut rng = rand::thread_rng();
         let analog: f64 = plugin_params.analog.value().into();
 
         let rand_tweak_1 = (rng.gen_range(0.0..10.0) - 5.0) * analog;
-        let frequency1 = midi_note_to_freq(note,
-                                           plugin_params.osc1_tuning.value().into(),
-                                           plugin_params.osc1_tuning_fine.value().into()) +
-            rand_tweak_1;
+        let frequency1 = midi_note_to_freq(
+            note,
+            plugin_params.osc1_tuning.value().into(),
+            plugin_params.osc1_tuning_fine.value().into(),
+        ) + rand_tweak_1;
 
         let rand_tweak_2 = (rng.gen_range(0.0..10.0) - 5.0) * analog;
-        let frequency2 = midi_note_to_freq(note, 
-                                           plugin_params.osc2_tuning.value().into(),
-                                           plugin_params.osc2_tuning_fine.value().into()) +
-            rand_tweak_2;
+        let frequency2 = midi_note_to_freq(
+            note,
+            plugin_params.osc2_tuning.value().into(),
+            plugin_params.osc2_tuning_fine.value().into(),
+        ) + rand_tweak_2;
 
         let rand_tweak_velocity = (rng.gen_range(0.0..1.0) - 0.5) * analog as f32;
         Self {
@@ -141,6 +142,4 @@ impl Voice {
 
         out
     }
-
-
 }
