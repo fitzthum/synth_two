@@ -25,58 +25,58 @@ pub struct SynthTwoParams {
     #[id = "release"]
     pub release: FloatParam,
 
-    // All the warp parameters for the first OSC
-    #[id = "wave-index-1"]
-    pub wave_index_1: FloatParam,
+    // All the parameters for the first OSC
+    #[id = "osc1-wave-index"]
+    pub osc1_wave_index: FloatParam,
 
-    #[id = "wave-warp-1"]
-    pub wave_warp_1: FloatParam,
+    #[id = "osc1-wave-warp"]
+    pub osc1_wave_warp: FloatParam,
 
-    #[id = "warp-attack-1"]
-    pub warp_attack_1: FloatParam,
+    #[id = "osc1-warp-attack"]
+    pub osc1_warp_attack: FloatParam,
 
-    #[id = "warp-decay-1"]
-    pub warp_decay_1: FloatParam,
+    #[id = "osc1-warp-decay"]
+    pub osc1_warp_decay: FloatParam,
 
-    #[id = "warp-sustain-1"]
-    pub warp_sustain_1: FloatParam,
+    #[id = "osc1-warp-sustain"]
+    pub osc1_warp_sustain: FloatParam,
 
-    #[id = "warp-release-1"]
-    pub warp_release_1: FloatParam,
+    #[id = "osc1-warp-release"]
+    pub osc1_warp_release: FloatParam,
 
-    // All the warp parameters for the second OSC
-    #[id = "wave-index-2"]
-    pub wave_index_2: FloatParam,
+    #[id = "osc1-tuning"]
+    pub osc1_tuning: FloatParam,
 
-    #[id = "wave-warp-2"]
-    pub wave_warp_2: FloatParam,
+    #[id = "osc1-tuning-fine"]
+    pub osc1_tuning_fine: FloatParam,
 
-    #[id = "warp-attack-2"]
-    pub warp_attack_2: FloatParam,
+    // All the parameters for the second OSC
+    #[id = "osc2-wave-index"]
+    pub osc2_wave_index: FloatParam,
 
-    #[id = "warp-decay-2"]
-    pub warp_decay_2: FloatParam,
+    #[id = "osc2-wave-warp"]
+    pub osc2_wave_warp: FloatParam,
 
-    #[id = "warp-sustain-2"]
-    pub warp_sustain_2: FloatParam,
+    #[id = "osc2-warp-attack"]
+    pub osc2_warp_attack: FloatParam,
 
-    #[id = "warp-release-2"]
-    pub warp_release_2: FloatParam,
+    #[id = "osc2-warp-decay"]
+    pub osc2_warp_decay: FloatParam,
+
+    #[id = "osc2-warp-sustain"]
+    pub osc2_warp_sustain: FloatParam,
+
+    #[id = "osc2-warp-release"]
+    pub osc2_warp_release: FloatParam,
+
+    #[id = "osc2-tuning"]
+    pub osc2_tuning: FloatParam,
+
+    #[id = "osc2-tuning-fine"]
+    pub osc2_tuning_fine: FloatParam,
 
     #[id = "oscillator-balance"]
     pub oscillator_balance: FloatParam,
-
-    #[id = "tuning-1"]
-    pub tuning_1: FloatParam,
-
-    #[id = "tuning-fine-1"]
-    pub tuning_fine_1: FloatParam,
-
-    #[id = "tuning-2"]
-    pub tuning_2: FloatParam,
-
-    #[id = "tuning-fine-2"]
-    pub tuning_fine_2: FloatParam,
 
     // Analog/humanization factor
     #[id = "analog"]
@@ -141,16 +141,16 @@ impl Default for SynthTwoParams {
                 .with_unit(" seconds"),
 
             // Wave warp stuff or first oscillator
-            wave_index_1: FloatParam::new(
-                "Wave Index 1",
+            osc1_wave_index: FloatParam::new(
+                "Oscillator 1 Wave Index",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             // this time we can scale this here rather than arithmetically later
-            wave_warp_1: FloatParam::new(
-                "Wave Warp 1",
+            osc1_wave_warp: FloatParam::new(
+                "Oscillator 1 Wave Warp",
                 0.0,
                 FloatRange::Linear {
                     min: -1.0,
@@ -159,48 +159,61 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_attack_1: FloatParam::new(
-                "Warp Attack 1",
+            osc1_warp_attack: FloatParam::new(
+                "Oscillator 1 Warp Attack",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
-            warp_decay_1: FloatParam::new(
-                "Warp Decay 1",
+            osc1_warp_decay: FloatParam::new(
+                "Oscillator 1 Warp Decay",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
-            warp_sustain_1: FloatParam::new(
-                "Warp Sustain 1",
+            osc1_warp_sustain: FloatParam::new(
+                "Oscillator 1 Warp Sustain",
                 1.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" percent"),
 
-            warp_release_1: FloatParam::new(
-                "Warp Release 1",
+            osc1_warp_release: FloatParam::new(
+                "Oscillator 1 Warp Release",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
+            osc1_tuning: FloatParam::new(
+                "Oscillator 1 Tuning",
+                0.0,
+                FloatRange::Linear { min: -3.0, max: 3.0 },
+            ),
+
+            osc1_tuning_fine: FloatParam::new(
+                "Oscillator 1 Fine Tuning",
+                0.0,
+                FloatRange::Linear { min: -10.0, max: 10.0 },
+            ),
+
+
             // Wave warp stuff for second oscillator
-            wave_index_2: FloatParam::new(
-                "Wave Index 2",
+            osc2_wave_index: FloatParam::new(
+                "Oscillator 2 Wave Index",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            wave_warp_2: FloatParam::new(
-                "Wave Warp 2",
+            osc2_wave_warp: FloatParam::new(
+                "Oscillator 2 Wave Warp",
                 0.0,
                 FloatRange::Linear {
                     min: -1.0,
@@ -209,37 +222,50 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            warp_attack_2: FloatParam::new(
-                "Warp Attack 2",
+            osc2_warp_attack: FloatParam::new(
+                "Oscillator 2 Warp Attack",
                 0.2,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
-            warp_decay_2: FloatParam::new(
-                "Warp Decay 2",
+            osc2_warp_decay: FloatParam::new(
+                "Oscillator 2 Warp Decay",
                 0.2,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
 
-            warp_sustain_2: FloatParam::new(
-                "Warp Sustain 2",
+            osc2_warp_sustain: FloatParam::new(
+                "Oscillator 2 Warp Sustain",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" percent"),
 
-            warp_release_2: FloatParam::new(
-                "Warp Release 2",
+            osc2_warp_release: FloatParam::new(
+                "Oscillator 2 Warp Release",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 5.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
+
+            // tuning 
+            osc2_tuning: FloatParam::new(
+                "Oscillator 2 Tuning",
+                0.0,
+                FloatRange::Linear { min: -3.0, max: 3.0 },
+            ),
+
+            osc2_tuning_fine: FloatParam::new(
+                "Oscillator 2 Fine Tuning",
+                0.0,
+                FloatRange::Linear { min: -10.0, max: 10.0 },
+            ),
 
             // Oscillator Balance
             oscillator_balance: FloatParam::new(
@@ -249,30 +275,6 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
-            // tuning 
-            tuning_1: FloatParam::new(
-                "Oscillator 1 Tuning",
-                0.0,
-                FloatRange::Linear { min: -3.0, max: 3.0 },
-            ),
-
-            tuning_fine_1: FloatParam::new(
-                "Oscillator 1 Fine Tuning",
-                0.0,
-                FloatRange::Linear { min: -10.0, max: 10.0 },
-            ),
-
-            tuning_2: FloatParam::new(
-                "Oscillator 2 Tuning",
-                0.0,
-                FloatRange::Linear { min: -3.0, max: 3.0 },
-            ),
-
-            tuning_fine_2: FloatParam::new(
-                "Oscillator 2 Fine Tuning",
-                0.0,
-                FloatRange::Linear { min: -10.0, max: 10.0 },
-            ),
 
             // Analog
             analog: FloatParam::new(

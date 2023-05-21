@@ -139,21 +139,21 @@ fn oscillator1(cx: &mut Context) {
             ParamKnob::new(
                 cx,
                 Data::params,
-                |params| &params.wave_index_1,
+                |params| &params.osc1_wave_index,
                 Some("Index"),
             );
-            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_1, Some("Warp"));
-            ParamKnob::new(cx, Data::params, |params| &params.tuning_1, Some("Tune"));
-            ParamKnob::new(cx, Data::params, |params| &params.tuning_fine_1, Some("Fine Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_wave_warp, Some("Warp"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_tuning, Some("Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_tuning_fine, Some("Fine Tune"));
         })
         .class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_1, Some("A"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_1, Some("D"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_1, Some("S"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_release_1, Some("R"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_attack, Some("A"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_decay, Some("D"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_sustain, Some("S"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc1_warp_release, Some("R"));
         })
         .class("row");
     })
@@ -169,22 +169,22 @@ fn oscillator2(cx: &mut Context) {
             ParamKnob::new(
                 cx,
                 Data::params,
-                |params| &params.wave_index_2,
+                |params| &params.osc2_wave_index,
                 Some("Index"),
             );
-            ParamKnob::new(cx, Data::params, |params| &params.wave_warp_2, Some("Warp"));
-            ParamKnob::new(cx, Data::params, |params| &params.tuning_2, Some("Tune"));
-            ParamKnob::new(cx, Data::params, |params| &params.tuning_fine_2, Some("Fine Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_wave_warp, Some("Warp"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_tuning, Some("Tune"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_tuning_fine, Some("Fine Tune"));
 
         })
         .class("row");
 
         // warp adsr
         HStack::new(cx, |cx| {
-            ParamKnob::new(cx, Data::params, |params| &params.warp_attack_2, Some("A"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_decay_2, Some("D"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_sustain_2, Some("S"));
-            ParamKnob::new(cx, Data::params, |params| &params.warp_release_2, Some("R"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_attack, Some("A"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_decay, Some("D"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_sustain, Some("S"));
+            ParamKnob::new(cx, Data::params, |params| &params.osc2_warp_release, Some("R"));
         })
         .class("row");
     })
