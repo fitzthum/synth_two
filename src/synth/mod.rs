@@ -31,7 +31,7 @@ pub struct Synth {
     graph_samples: Arc<Mutex<Vec<f32>>>,
 
     filter: Biquad<f32>,
-    lfo1: Option<WaveTableLfo>,
+    lfo1: Option<Arc<Mutex<WaveTableLfo>>>,
 }
 
 impl Synth {
@@ -68,11 +68,11 @@ impl Synth {
         self.update_filter();
 
         let lfo1_period = self.plugin_params.lfo1_period.smoothed.next();
-        self.lfo1 = Some(WaveTableLfo::new(
+        self.lfo1 = Some(Arc::new(Mutex::new(WaveTableLfo::new(
             self.sample_rate,
             lfo1_period,
             lfo1_samples,
-        ));
+        ))));
     }
 
     // we're doing fake stereo at first
@@ -90,7 +90,7 @@ impl Synth {
     // any components that need some re-initialization based on param changes
     fn update_components(&mut self) {
         if let Some(lfo1) = self.lfo1.as_mut() {
-            lfo1.tick();
+            lfo1.lock().unwrap().tick();
         }
 
         // Filter Parameters
@@ -117,14 +117,16 @@ impl Synth {
         // LFO1 Parameters
         if self.plugin_params.lfo1_period.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
-                lfo1.set_period(self.plugin_params.lfo1_period.smoothed.next());
-                lfo1.generate_samples();
+                let mut lfo = lfo1.lock().unwrap();
+                lfo.set_period(self.plugin_params.lfo1_period.smoothed.next());
+                lfo.generate_samples();
             }
         }
         if self.plugin_params.lfo1_index.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
-                lfo1.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
-                lfo1.generate_samples();
+                let mut lfo = lfo1.lock().unwrap();
+                lfo.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
+                lfo.generate_samples();
             }
         }
     }
@@ -139,7 +141,7 @@ impl Synth {
 
         let lfo_strength = self.plugin_params.filter_lfo_strength.smoothed.next();
         if let Some(lfo) = self.lfo1.as_mut() {
-            cutoff += lfo.amplitude() as f32 * lfo_strength;
+            cutoff += lfo.lock().unwrap().amplitude() as f32 * lfo_strength;
             cutoff = cutoff.min(FILTER_CUTOFF_MAX).max(FILTER_CUTOFF_MIN);
         }
 
@@ -152,7 +154,7 @@ impl Synth {
         let time_per_sample = 1.0 / self.sample_rate;
         self.voices.insert(
             note,
-            Voice::from_midi(note, velocity, time_per_sample, self.plugin_params.clone()),
+            Voice::from_midi(note, velocity, time_per_sample, self.plugin_params.clone(), self.lfo1.as_ref().unwrap().clone()),
         );
     }
 

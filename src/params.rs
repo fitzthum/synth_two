@@ -86,6 +86,9 @@ pub struct SynthTwoParams {
     #[id = "oscillator-balance"]
     pub oscillator_balance: FloatParam,
 
+    #[id = "oscillator-balance-lfo-strength"]
+    pub oscillator_balance_lfo_strength: FloatParam,
+
     // Analog/humanization factor
     #[id = "analog"]
     pub analog: FloatParam,
@@ -329,6 +332,13 @@ impl Default for SynthTwoParams {
                 "Oscillator Balance",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            oscillator_balance_lfo_strength: FloatParam::new(
+                "Oscillator Balance LFO Strength",
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 0.5 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 

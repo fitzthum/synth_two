@@ -1,9 +1,10 @@
 // A voice roughly corresponds to a note
 use rand::Rng;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use crate::synth::envelope::{Envelope, ADSR};
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
+use crate::synth::lfo::{Lfo, WaveTableLfo};
 use crate::SynthTwoParams;
 
 fn midi_note_to_freq(note: u8, tune: f64, tune_fine: f64) -> f64 {
@@ -35,6 +36,7 @@ pub struct Voice {
     main_envelope: ADSR,
     warp_envelope_1: ADSR,
     warp_envelope_2: ADSR,
+    lfo1: Arc<Mutex<WaveTableLfo>>,
 }
 
 impl Voice {
@@ -43,6 +45,7 @@ impl Voice {
         velocity: f32,
         time_per_sample: f64,
         plugin_params: Arc<SynthTwoParams>,
+        lfo1: Arc<Mutex<WaveTableLfo>>,
     ) -> Self {
         let mut rng = rand::thread_rng();
         let analog: f64 = plugin_params.analog.value().into();
@@ -74,6 +77,7 @@ impl Voice {
             main_envelope: ADSR::default(),
             warp_envelope_1: ADSR::default(),
             warp_envelope_2: ADSR::default(),
+            lfo1,
         }
     }
 
@@ -96,7 +100,16 @@ impl Voice {
         self.oscillator2.set_wave_index(wi2);
         let o2 = self.oscillator2.process(self.time_since_on);
 
-        let balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
+        let mut balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
+        let balance_lfo_strength: f64 = self.plugin_params.oscillator_balance_lfo_strength.smoothed.next().into();
+        
+        // LFO for balance
+        if balance_lfo_strength > 0.0 {
+            // the lfo uses the global clock.
+            balance += self.lfo1.lock().unwrap().amplitude() * balance_lfo_strength;
+            balance = balance.min(1.0).max(0.0); 
+        }
+        
         let ob = (o2 * balance) + (o1 * (1.0 - balance));
 
         self.time_since_on += self.time_per_sample;

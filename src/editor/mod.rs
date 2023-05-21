@@ -76,6 +76,13 @@ fn global_controls(cx: &mut Context) {
                 |params| &params.oscillator_balance,
                 Some("Balance"),
             );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.oscillator_balance_lfo_strength,
+                Some("Balance LFO"),
+            );
+ 
             ParamKnob::new(cx, Data::params, |params| &params.analog, None);
         })
         .class("row");
