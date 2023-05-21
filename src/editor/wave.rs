@@ -36,6 +36,10 @@ impl View for WaveGraph {
 
         let samples = self.samples.lock().unwrap();
 
+        if samples.len() == 0 {
+            return;
+        }
+
         let line_width = cx.style.dpi_factor as f32 * 1.5;
         let paint = vg::Paint::color(cx.font_color().cloned().unwrap_or_default().into())
             .with_line_width(line_width);

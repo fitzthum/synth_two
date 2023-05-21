@@ -56,6 +56,7 @@ impl Synth {
         envelope: Arc<Mutex<Vec<f32>>>,
         graph_samples: Arc<Mutex<Vec<f32>>>,
         spectrum_samples: Arc<Mutex<Vec<f32>>>,
+        lfo1_samples: Arc<Mutex<Vec<f32>>>,
     ) {
         self.sample_rate = sample_rate;
         self.plugin_params = plugin_params;
@@ -67,7 +68,7 @@ impl Synth {
         self.update_filter();
 
         let lfo1_period = self.plugin_params.lfo1_period.smoothed.next();
-        self.lfo1 = Some(WaveTableLfo::new(self.sample_rate, lfo1_period));
+        self.lfo1 = Some(WaveTableLfo::new(self.sample_rate, lfo1_period, lfo1_samples));
     }
 
     // we're doing fake stereo at first
@@ -114,11 +115,13 @@ impl Synth {
         if self.plugin_params.lfo1_period.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 lfo1.set_period(self.plugin_params.lfo1_period.smoothed.next());
+                lfo1.generate_samples();
             }
         }
         if self.plugin_params.lfo1_index.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 lfo1.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
+                lfo1.generate_samples();
             }
         }
 

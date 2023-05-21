@@ -23,6 +23,7 @@ pub struct Data {
     pub envelope: Arc<Mutex<Vec<f32>>>,
     pub graph_samples: Arc<Mutex<Vec<f32>>>,
     pub spectrum_samples: Arc<Mutex<Vec<f32>>>,
+    pub lfo1_samples: Arc<Mutex<Vec<f32>>>,
 }
 
 impl Model for Data {}
@@ -221,6 +222,10 @@ fn lfo1(cx: &mut Context) {
         HStack::new(cx, |cx| { 
             ParamKnob::new(cx, Data::params, |params| &params.lfo1_period, Some("Period"));
             ParamKnob::new(cx, Data::params, |params| &params.lfo1_index, Some("Index"));
+            VStack::new(cx, |cx| {
+                WaveGraph::new(cx, Data::lfo1_samples).class("graph");
+            }).class("graph-wrapper");
+
         }).class("row");
     })
     .class("section")

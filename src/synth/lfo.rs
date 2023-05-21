@@ -1,9 +1,13 @@
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
+use std::sync::{Arc, Mutex};
 
 pub trait Lfo {
     fn tick(&mut self);
     fn amplitude(&mut self) -> f64;
     fn set_period(&mut self, period: f32);
+
+    // For populating the graph of the LFO
+    fn generate_samples(&self);
 }
 
 // wrapper around WaveTable turning it into an LFO
@@ -13,10 +17,11 @@ pub struct WaveTableLfo {
     sample_rate: f64,
     oscillator: WaveTableOscillator,
     amplitude: Option<f64>,
+    samples: Arc<Mutex<Vec<f32>>>,
 }
 
 impl WaveTableLfo {
-    pub fn new(sample_rate: f64, period: f32) -> Self {
+    pub fn new(sample_rate: f64, period: f32, samples: Arc<Mutex<Vec<f32>>>) -> Self {
         let time_per_sample = 1.0 / sample_rate;
         let frequency = 1.0 / period;
         let osc = WaveTableOscillator::new(frequency.into(), time_per_sample);
@@ -27,6 +32,7 @@ impl WaveTableLfo {
             sample_rate,
             oscillator: osc,
             amplitude: None,
+            samples,
         }
 
     }
@@ -72,5 +78,20 @@ impl Lfo for WaveTableLfo {
      
         amplitude
     }
-    
+
+    // Generate buffer of samples to show in the editor
+    fn generate_samples(&self) {
+        let mut graph_samples = vec![];
+
+        // let's try to calculate the minimum to make a decent looking graph
+        let num_samples = 512;
+
+        let time_per_sample = 1.0 / 512 as f64;
+
+        for n in 0..num_samples {
+            graph_samples.push(self.oscillator.process(n as f64 * time_per_sample) as f32);
+        }
+
+        *self.samples.lock().unwrap() = graph_samples;
+    }
 }
