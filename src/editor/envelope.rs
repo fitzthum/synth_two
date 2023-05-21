@@ -3,6 +3,8 @@ use nih_plug_vizia::vizia::vg;
 
 use std::sync::{Arc, Mutex};
 
+use crate::params::ENVELOPE_TIME_MAX;
+
 pub struct EnvelopeGraph {
     envelope: Arc<Mutex<Vec<f32>>>,
 }
@@ -54,12 +56,12 @@ impl View for EnvelopeGraph {
 
         // the attack line will go to the top of the box
         // and some horizontal offset
-        let a_offset = (a / 5.0) * section_width;
+        let a_offset = (a / ENVELOPE_TIME_MAX) * section_width;
         path.line_to(bounds.x + a_offset, bounds.y);
 
         // now go over by some delay offset
         // factor in the attack offset because we've already moved that far
-        let d_offset_horizontal = a_offset + (d / 5.0) * section_width;
+        let d_offset_horizontal = a_offset + (d / ENVELOPE_TIME_MAX) * section_width;
         let d_offset_vertical = bounds.h * s;
         path.line_to(bounds.x + d_offset_horizontal, bounds.y + d_offset_vertical);
 
@@ -70,7 +72,7 @@ impl View for EnvelopeGraph {
         );
 
         // now add on the release time and go to the bottom
-        let r_offset = d_offset_horizontal + section_width + (r / 5.0) * section_width;
+        let r_offset = d_offset_horizontal + section_width + (r / ENVELOPE_TIME_MAX) * section_width;
         path.line_to(bounds.x + r_offset, bounds.y + bounds.h);
 
         canvas.stroke_path(&mut path, &paint);

@@ -1,5 +1,10 @@
 use nih_plug::prelude::*;
 
+pub const FILTER_CUTOFF_MIN: f32 = 40.0;
+pub const FILTER_CUTOFF_MAX: f32 = 18000.0;
+
+pub const ENVELOPE_TIME_MAX: f32 = 5.0;
+
 #[derive(Enum, Debug, PartialEq)]
 pub enum LfoConnection {
     #[id = "none"]
@@ -121,12 +126,12 @@ impl Default for SynthTwoParams {
             .with_string_to_value(formatters::s2v_f32_gain_to_db()),
 
             // Attack
-            attack: FloatParam::new("Attack", 0.01, FloatRange::Linear { min: 0.0, max: 5.0 })
+            attack: FloatParam::new("Attack", 0.01, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" seconds"),
 
             // Decay
-            decay: FloatParam::new("Decay", 0.0, FloatRange::Linear { min: 0.0, max: 5.0 })
+            decay: FloatParam::new("Decay", 0.0, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX  })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" seconds"),
 
@@ -136,7 +141,7 @@ impl Default for SynthTwoParams {
                 .with_unit(" percent"),
 
             // Release
-            release: FloatParam::new("Release", 0.01, FloatRange::Linear { min: 0.0, max: 5.0 })
+            release: FloatParam::new("Release", 0.01, FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX })
                 .with_smoother(SmoothingStyle::Logarithmic(50.0))
                 .with_unit(" seconds"),
 
@@ -162,7 +167,7 @@ impl Default for SynthTwoParams {
             osc1_warp_attack: FloatParam::new(
                 "Oscillator 1 Warp Attack",
                 0.5,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -170,7 +175,7 @@ impl Default for SynthTwoParams {
             osc1_warp_decay: FloatParam::new(
                 "Oscillator 1 Warp Decay",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -186,7 +191,7 @@ impl Default for SynthTwoParams {
             osc1_warp_release: FloatParam::new(
                 "Oscillator 1 Warp Release",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -225,7 +230,7 @@ impl Default for SynthTwoParams {
             osc2_warp_attack: FloatParam::new(
                 "Oscillator 2 Warp Attack",
                 0.2,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -233,7 +238,7 @@ impl Default for SynthTwoParams {
             osc2_warp_decay: FloatParam::new(
                 "Oscillator 2 Warp Decay",
                 0.2,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -249,7 +254,7 @@ impl Default for SynthTwoParams {
             osc2_warp_release: FloatParam::new(
                 "Oscillator 2 Warp Release",
                 0.0,
-                FloatRange::Linear { min: 0.0, max: 5.0 },
+                FloatRange::Linear { min: 0.0, max: ENVELOPE_TIME_MAX },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
@@ -286,7 +291,7 @@ impl Default for SynthTwoParams {
             filter_cutoff: FloatParam::new(
                 "Filter Cutoff",
                 10000.0,
-                FloatRange::Skewed { min: 40.0, max: 18000.0, factor: FloatRange::skew_factor(-1.0), },
+                FloatRange::Skewed { min: FILTER_CUTOFF_MIN, max: FILTER_CUTOFF_MAX, factor: FloatRange::skew_factor(-1.0), },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 

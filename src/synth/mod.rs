@@ -17,6 +17,7 @@ mod lfo;
 use lfo::{Lfo, WaveTableLfo};
 
 use crate::SynthTwoParams;
+use crate::params::{FILTER_CUTOFF_MIN, FILTER_CUTOFF_MAX};
 
 pub struct Synth {
     sample_rate: f64,
@@ -135,7 +136,7 @@ impl Synth {
         let lfo_strength = self.plugin_params.filter_lfo_strength.smoothed.next();
         if let Some(lfo) = self.lfo1.as_mut() {
             cutoff += lfo.amplitude() as f32 * lfo_strength;
-            cutoff = cutoff.min(18000.0).max(40.0);
+            cutoff = cutoff.min(FILTER_CUTOFF_MAX).max(FILTER_CUTOFF_MIN);
         }
 
         let coefficients = BiquadCoefficients::lowpass(self.sample_rate as f32, cutoff, q);
