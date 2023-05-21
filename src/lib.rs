@@ -125,6 +125,8 @@ pub struct SynthTwoParams {
     #[id = "lfo1-period"]
     pub lfo1_period: FloatParam,
 
+    #[id = "lfo1-index"]
+    pub lfo1_index: FloatParam,
 
 }
 
@@ -357,6 +359,14 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
             .with_unit(" seconds"),
+
+            lfo1_index: FloatParam::new(
+                "LFO1 Index",
+                0.5,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
 
 
         }

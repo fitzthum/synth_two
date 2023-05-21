@@ -30,6 +30,12 @@ impl WaveTableLfo {
         }
 
     }
+    
+    // This is specific to a WaveTable, so it's not in
+    // the LFO trait
+    pub fn set_index(&mut self, index: f64) {
+        self.oscillator.set_wave_index(index);
+    }
 }
 
 impl Lfo for WaveTableLfo {

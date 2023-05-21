@@ -220,6 +220,7 @@ fn lfo1(cx: &mut Context) {
 
         HStack::new(cx, |cx| { 
             ParamKnob::new(cx, Data::params, |params| &params.lfo1_period, Some("Period"));
+            ParamKnob::new(cx, Data::params, |params| &params.lfo1_index, Some("Index"));
         }).class("row");
     })
     .class("section")

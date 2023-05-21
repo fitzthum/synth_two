@@ -114,8 +114,14 @@ impl Synth {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 lfo1.set_period(self.plugin_params.lfo1_period.smoothed.next());
             }
-
         }
+        if self.plugin_params.lfo1_index.smoothed.is_smoothing() {
+            if let Some(lfo1) = self.lfo1.as_mut() {
+                lfo1.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
+            }
+        }
+
+
     }
 
     fn update_filter(&mut self) {
