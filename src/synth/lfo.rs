@@ -1,6 +1,8 @@
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
 use std::sync::{Arc, Mutex};
 
+use crate::params::LFO_PERIOD_MAX;
+
 pub trait Lfo {
     fn tick(&mut self);
     fn amplitude(&mut self) -> f64;
@@ -84,7 +86,7 @@ impl Lfo for WaveTableLfo {
         // let's try to calculate the minimum to make a decent looking graph
         let num_samples = 512;
 
-        let time_per_sample = 1.0 / 512 as f64;
+        let time_per_sample = (LFO_PERIOD_MAX / 512.0) as f64;
 
         for n in 0..num_samples {
             graph_samples.push(self.oscillator.process(n as f64 * time_per_sample) as f32);

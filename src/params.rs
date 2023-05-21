@@ -5,6 +5,9 @@ pub const FILTER_CUTOFF_MAX: f32 = 18000.0;
 
 pub const ENVELOPE_TIME_MAX: f32 = 5.0;
 
+pub const LFO_PERIOD_MIN: f32 = 0.03;
+pub const LFO_PERIOD_MAX: f32 = 8.0;
+
 #[derive(Enum, Debug, PartialEq)]
 pub enum LfoConnection {
     #[id = "none"]
@@ -371,8 +374,8 @@ impl Default for SynthTwoParams {
                 "LFO1 Period",
                 1.0,
                 FloatRange::Linear {
-                    min: 0.1,
-                    max: 20.0,
+                    min: LFO_PERIOD_MIN,
+                    max: LFO_PERIOD_MAX,
                 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
