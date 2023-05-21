@@ -332,7 +332,7 @@ impl Default for SynthTwoParams {
             filter_cutoff: FloatParam::new(
                 "Filter Cutoff",
                 10000.0,
-                FloatRange::Skewed { min: 20.0, max: 18000.0, factor: FloatRange::skew_factor(-1.0), },
+                FloatRange::Skewed { min: 40.0, max: 18000.0, factor: FloatRange::skew_factor(-1.0), },
             )
             .with_smoother(SmoothingStyle::Logarithmic(100.0)),
 

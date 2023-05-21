@@ -135,6 +135,7 @@ impl Synth {
         let lfo_strength = self.plugin_params.filter_lfo_strength.smoothed.next();
         if let Some(lfo) = self.lfo1.as_mut() {
             cutoff += lfo.amplitude() as f32 * lfo_strength;
+            cutoff = cutoff.min(18000.0).max(40.0);
         }
 
         let coefficients = BiquadCoefficients::lowpass(self.sample_rate as f32, cutoff, q);
