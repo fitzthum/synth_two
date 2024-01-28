@@ -3,6 +3,7 @@ use nih_plug::prelude::Editor;
 use nih_plug_vizia::vizia::prelude::*;
 use nih_plug_vizia::widgets::*;
 use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
+use nih_plug::context::gui::GuiContext;
 use std::sync::{Arc, Mutex};
 
 mod knob;
@@ -37,7 +38,7 @@ pub(crate) fn default_state() -> Arc<ViziaState> {
 }
 
 pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dyn Editor>> {
-    create_vizia_editor(editor_state, ViziaTheming::Custom, move |cx, _| {
+    create_vizia_editor(editor_state, ViziaTheming::Custom, move |cx, gcx| {
         cx.add_fonts_mem(&[b"Px IBM MDA"]);
         cx.set_default_font(&["Px IBM MDA"]);
 
@@ -47,6 +48,7 @@ pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dy
 
         ResizeHandle::new(cx);
 
+        presets(cx, gcx);
         VStack::new(cx, |cx| {
             general(cx);
             oscillators(cx);
@@ -136,9 +138,11 @@ fn output(cx: &mut Context) {
             .row_between(Pixels(20.0));
         })
         .class("section");
-        PresetMenu::new(cx);
     });
+}
 
+fn presets(cx: &mut Context, gcx: Arc<dyn GuiContext>) {
+    PresetMenu::new(cx, gcx);
 }
 
 fn oscillators(cx: &mut Context) {
