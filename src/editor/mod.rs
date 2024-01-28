@@ -17,6 +17,9 @@ use wave::WaveGraph;
 mod spectrum;
 use spectrum::SpectrumGraph;
 
+mod presets;
+use presets::PresetMenu;
+
 #[derive(Lens, Clone)]
 pub struct Data {
     pub params: Arc<SynthTwoParams>,
@@ -133,7 +136,9 @@ fn output(cx: &mut Context) {
             .row_between(Pixels(20.0));
         })
         .class("section");
+        PresetMenu::new(cx);
     });
+
 }
 
 fn oscillators(cx: &mut Context) {
