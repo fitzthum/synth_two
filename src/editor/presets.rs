@@ -9,11 +9,11 @@
 // what to do about the default?
 //
 // - update the save thing to add a dictinoary around the preset
-// - put this into include bytes 
+// - put this into include bytes
 // - make a dropdown with one element coming from include bytes
 // - add more
 // - add local mechanism described above
-// - add saving of new presets (could do this first, actually) 
+// - add saving of new presets (could do this first, actually)
 
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
@@ -24,6 +24,7 @@ use nih_plug::context::gui::GuiContext;
 use nih_plug::wrapper::state::PluginState;
 use std::collections::HashMap;
 
+// TODO: make this OS independent
 const PRESETS_PATH: &str = "/tmp/presets.json";
 
 #[derive(Serialize, Deserialize)]
@@ -38,31 +39,34 @@ impl Presets {
         }
     }
 
-    // load tries to load from fs but falls back to the builtin 
-    fn load(&self) -> Self {
-        let presets_string = std::fs::read(PRESET_PATH).unwrap();
+    // load tries to load from fs but falls back to the builtin
+    fn load() -> Self {
+        let presets_string = match std::path::Path::new(PRESETS_PATH).exists() {
+            true => std::fs::read(PRESETS_PATH).unwrap(),
+            false => include_str!("../../presets.json").into(),
+        };
         serde_json::from_slice(&presets_string).unwrap()
     }
 
     // for now this will allow you to overwrite an existing preset
     fn add(&mut self, name: String, state: PluginState) -> Result<()> {
-        self.presets.insert(name, state); 
-        
+        self.presets.insert(name, state);
+
         // propogate the changes back to the fs
         self.save();
 
         Ok(())
 
     }
-    
+
     fn get(&self, name: String) -> PluginState {
         self.presets.get(&name).unwrap().clone()
     }
 
     // save always saves to the fs location
     fn save(&self) {
-        let presets_string = serde_json::to_string(&self.presets).unwrap(); 
-        std::fs::write(PRESET_PATH, presets_string).unwrap();
+        let presets_string = serde_json::to_string(&self.presets).unwrap();
+        std::fs::write(PRESETS_PATH, presets_string).unwrap();
 
     }
 }
@@ -86,18 +90,18 @@ impl PresetMenu {
         Self {
             gui_context: gcx,
             // TODO: replace with load() once we have some base presets to load
-            presets: Presets::new(),
+            presets: Presets::load(),
         }
             .build(cx, |cx| {
                 HStack::new(cx, |cx| {
 					Button::new(
-						cx, 
-						|ex| ex.emit(PresetMenuEvent::SavePreset), 
+						cx,
+						|ex| ex.emit(PresetMenuEvent::SavePreset),
 						|cx| Label::new(cx, "Save Preset")
 					);
 					Button::new(
-						cx, 
-						|ex| ex.emit(PresetMenuEvent::LoadPreset), 
+						cx,
+						|ex| ex.emit(PresetMenuEvent::LoadPreset),
 						|cx| Label::new(cx, "Load Preset")
 					);
 
@@ -114,7 +118,7 @@ impl View for PresetMenu {
 
             }
             PresetMenuEvent::LoadPreset => {
-                let json_state = std::fs::read(PRESET_PATH).unwrap();
+                let json_state = std::fs::read(PRESETS_PATH).unwrap();
                 self.gui_context.set_state(serde_json::from_slice(&json_state).unwrap());
 
             }
