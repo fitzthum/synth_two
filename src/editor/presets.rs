@@ -101,6 +101,7 @@ impl PresetMenu {
 			selected_preset: preset_names[0].clone(),
         }.build(cx, |cx| {
                 HStack::new(cx, |cx| {
+                    Label::new(cx, "Presets");
                     // some kind of dropdown thing here
                     ScrollView::new(cx, 0.0, 0.0, false, true, |cx| {
                         VStack::new(cx, |cx| {
@@ -113,12 +114,13 @@ impl PresetMenu {
 
                         });
                     })
+                    .class("dropdown")
                     .width(Pixels(100.0));
 
 					Button::new(
 						cx,
 						|ex| ex.emit(PresetMenuEvent::LoadPreset),
-						|cx| Label::new(cx, "Load Preset")
+						|cx| Label::new(cx, "Load")
 					);
 
 
@@ -132,11 +134,12 @@ impl PresetMenu {
 					Button::new(
 						cx,
 						|ex| ex.emit(PresetMenuEvent::SavePreset),
-						|cx| Label::new(cx, "Save Preset")
+						|cx| Label::new(cx, "Save")
 					);
 
                 })
-                .col_between(Pixels(20.0));
+                .class("section")
+                .col_between(Pixels(30.0));
             })
     }
 }
