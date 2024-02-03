@@ -1,19 +1,8 @@
 // Widget for handling presets.
 //
-// To start with this will just be a button to load/save
+//  A preset menu
 //
-// Presets are stored in a JSON dictionary stored locally (where?)
-// Save the default ones with include data
-// When you first create this thing, check if there is a local file
-//
-// what to do about the default?
-//
-// - update the save thing to add a dictinoary around the preset
-// - put this into include bytes
-// - make a dropdown with one element coming from include bytes
-// - add more
-// - add local mechanism described above
-// - add saving of new presets (could do this first, actually)
+//  FIXME: edit event does not trigger on textbox
 
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
