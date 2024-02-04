@@ -2,6 +2,7 @@ use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
 use std::sync::{Arc, Mutex};
 
 use crate::params::LFO_PERIOD_MAX;
+use crate::params::WaveBank; 
 
 pub trait Lfo {
     fn tick(&mut self);
@@ -26,7 +27,7 @@ impl WaveTableLfo {
     pub fn new(sample_rate: f64, period: f32, samples: Arc<Mutex<Vec<f32>>>) -> Self {
         let time_per_sample = 1.0 / sample_rate;
         let frequency = 1.0 / period;
-        let osc = WaveTableOscillator::new(frequency.into(), time_per_sample);
+        let osc = WaveTableOscillator::new(frequency.into(), time_per_sample, WaveBank::Basic);
 
         Self {
             sample_count: 0,

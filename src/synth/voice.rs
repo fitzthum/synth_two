@@ -57,12 +57,16 @@ impl Voice {
             plugin_params.osc1.tuning_fine.value().into(),
         ) + rand_tweak_1;
 
+        let bank_id1 = plugin_params.osc1.bank_id.value();
+
         let rand_tweak_2 = (rng.gen_range(0.0..10.0) - 5.0) * analog;
         let frequency2 = midi_note_to_freq(
             note,
             plugin_params.osc2.tuning.value().into(),
             plugin_params.osc2.tuning_fine.value().into(),
         ) + rand_tweak_2;
+
+        let bank_id2 = plugin_params.osc2.bank_id.value();
 
         let rand_tweak_velocity = (rng.gen_range(0.0..1.0) - 0.5) * analog as f32;
         Self {
@@ -72,8 +76,8 @@ impl Voice {
             finished: false,
             time_per_sample,
             plugin_params,
-            oscillator1: WaveTableOscillator::new(frequency1, time_per_sample),
-            oscillator2: WaveTableOscillator::new(frequency2, time_per_sample),
+            oscillator1: WaveTableOscillator::new(frequency1, time_per_sample, bank_id1),
+            oscillator2: WaveTableOscillator::new(frequency2, time_per_sample, bank_id2),
             main_envelope: ADSR::default(),
             warp_envelope_1: ADSR::default(),
             warp_envelope_2: ADSR::default(),

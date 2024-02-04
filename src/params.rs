@@ -18,6 +18,17 @@ pub enum LfoConnection {
     Lfo1,
 }
 
+#[derive(Enum, Debug, Eq, PartialEq, Hash, Clone)]
+pub enum WaveBank {
+    #[id = "basic"]
+    Basic,
+    #[id = "original"]
+    Original,
+    #[id = "sample1"]
+    Sample1,
+
+}
+
 #[derive(Params)]
 pub struct OscillatorParams {
     #[id = "wave-index"]
@@ -44,6 +55,9 @@ pub struct OscillatorParams {
 
     #[id = "tuning-fine"]
     pub tuning_fine: FloatParam,
+
+    #[id = "table-id"]
+    pub bank_id: EnumParam<WaveBank>,
 
 }
 
@@ -126,6 +140,9 @@ impl Default for OscillatorParams {
                     max: 10.0,
                 },
             ),
+
+            bank_id: EnumParam::new("Wave Table", WaveBank::Basic),
+
         }
     }
 }
