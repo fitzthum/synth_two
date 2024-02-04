@@ -134,7 +134,7 @@ impl PresetMenu {
 }
 
 impl View for PresetMenu {
-    fn event(&mut self, cx: &mut EventContext, event: &mut Event) {
+    fn event(&mut self, _cx: &mut EventContext, event: &mut Event) {
         event.map(|preset_event, _| match preset_event {
             PresetMenuEvent::SavePreset => {
                 self.presets.add(&self.new_preset_name, self.gui_context.get_state()).unwrap();

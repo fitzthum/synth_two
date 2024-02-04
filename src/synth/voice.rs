@@ -53,15 +53,15 @@ impl Voice {
         let rand_tweak_1 = (rng.gen_range(0.0..10.0) - 5.0) * analog;
         let frequency1 = midi_note_to_freq(
             note,
-            plugin_params.osc1_tuning.value().into(),
-            plugin_params.osc1_tuning_fine.value().into(),
+            plugin_params.osc1.tuning.value().into(),
+            plugin_params.osc1.tuning_fine.value().into(),
         ) + rand_tweak_1;
 
         let rand_tweak_2 = (rng.gen_range(0.0..10.0) - 5.0) * analog;
         let frequency2 = midi_note_to_freq(
             note,
-            plugin_params.osc2_tuning.value().into(),
-            plugin_params.osc2_tuning_fine.value().into(),
+            plugin_params.osc2.tuning.value().into(),
+            plugin_params.osc2.tuning_fine.value().into(),
         ) + rand_tweak_2;
 
         let rand_tweak_velocity = (rng.gen_range(0.0..1.0) - 0.5) * analog as f32;
@@ -86,15 +86,15 @@ impl Voice {
     }
 
     pub fn process(&mut self) -> f64 {
-        let ww1: f64 = self.plugin_params.osc1_wave_warp.value().into();
-        let bwi1: f64 = self.plugin_params.osc1_wave_index.value().into();
+        let ww1: f64 = self.plugin_params.osc1.wave_warp.value().into();
+        let bwi1: f64 = self.plugin_params.osc1.wave_index.value().into();
         let wi1 = bwi1 + ww1 * self.warp_envelope_1();
 
         self.oscillator1.set_wave_index(wi1);
         let o1 = self.oscillator1.process(self.time_since_on);
 
-        let ww2: f64 = self.plugin_params.osc2_wave_warp.value().into();
-        let bwi2: f64 = self.plugin_params.osc2_wave_index.value().into();
+        let ww2: f64 = self.plugin_params.osc2.wave_warp.value().into();
+        let bwi2: f64 = self.plugin_params.osc2.wave_index.value().into();
         let wi2 = bwi2 + ww2 * self.warp_envelope_2();
 
         self.oscillator2.set_wave_index(wi2);
@@ -118,10 +118,10 @@ impl Voice {
 
     fn warp_envelope_1(&mut self) -> f64 {
         self.warp_envelope_1.update(
-            self.plugin_params.osc1_warp_attack.smoothed.next(),
-            self.plugin_params.osc1_warp_decay.smoothed.next(),
-            self.plugin_params.osc1_warp_sustain.smoothed.next(),
-            self.plugin_params.osc1_warp_release.smoothed.next(),
+            self.plugin_params.osc1.warp_attack.smoothed.next(),
+            self.plugin_params.osc1.warp_decay.smoothed.next(),
+            self.plugin_params.osc1.warp_sustain.smoothed.next(),
+            self.plugin_params.osc1.warp_release.smoothed.next(),
         );
 
         self.warp_envelope_1
@@ -130,10 +130,10 @@ impl Voice {
 
     fn warp_envelope_2(&mut self) -> f64 {
         self.warp_envelope_2.update(
-            self.plugin_params.osc2_warp_attack.smoothed.next(),
-            self.plugin_params.osc2_warp_decay.smoothed.next(),
-            self.plugin_params.osc2_warp_sustain.smoothed.next(),
-            self.plugin_params.osc2_warp_release.smoothed.next(),
+            self.plugin_params.osc2.warp_attack.smoothed.next(),
+            self.plugin_params.osc2.warp_decay.smoothed.next(),
+            self.plugin_params.osc2.warp_sustain.smoothed.next(),
+            self.plugin_params.osc2.warp_release.smoothed.next(),
         );
 
         self.warp_envelope_2

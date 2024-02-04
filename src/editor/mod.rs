@@ -1,10 +1,11 @@
-use crate::SynthTwoParams;
 use nih_plug::prelude::Editor;
 use nih_plug_vizia::vizia::prelude::*;
 use nih_plug_vizia::widgets::*;
 use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
 use nih_plug::context::gui::GuiContext;
 use std::sync::{Arc, Mutex};
+
+use crate::SynthTwoParams;
 
 mod knob;
 use knob::ParamKnob;
@@ -20,6 +21,9 @@ use spectrum::SpectrumGraph;
 
 mod presets;
 use presets::PresetMenu;
+
+mod oscillator;
+use oscillator::Oscillator;
 
 #[derive(Lens, Clone)]
 pub struct Data {
@@ -147,132 +151,10 @@ fn presets(cx: &mut Context, gcx: Arc<dyn GuiContext>) {
 
 fn oscillators(cx: &mut Context) {
     HStack::new(cx, |cx| {
-        oscillator1(cx);
-        oscillator2(cx);
+        Oscillator::new(cx, Data::params.map(|p| p.osc1.clone()));
+        Oscillator::new(cx, Data::params.map(|p| p.osc2.clone()));
     })
     .id("oscillators");
-}
-
-// in theory this should be generic but idk how
-// maybe if we had a struct for the state of each oscillator
-fn oscillator1(cx: &mut Context) {
-    VStack::new(cx, |cx| {
-        Label::new(cx, "Oscillator 1").class("section-title");
-
-        // wave controls
-        HStack::new(cx, |cx| {
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_wave_index,
-                Some("Index"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_wave_warp,
-                Some("Warp"),
-            );
-            ParamKnob::new(cx, Data::params, |params| &params.osc1_tuning, Some("Tune"));
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_tuning_fine,
-                Some("Fine Tune"),
-            );
-        })
-        .class("row");
-
-        // warp adsr
-        HStack::new(cx, |cx| {
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_warp_attack,
-                Some("A"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_warp_decay,
-                Some("D"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_warp_sustain,
-                Some("S"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc1_warp_release,
-                Some("R"),
-            );
-        })
-        .class("row");
-    })
-    .class("section");
-}
-
-fn oscillator2(cx: &mut Context) {
-    VStack::new(cx, |cx| {
-        Label::new(cx, "Oscillator 2").class("section-title");
-
-        // wave controls
-        HStack::new(cx, |cx| {
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_wave_index,
-                Some("Index"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_wave_warp,
-                Some("Warp"),
-            );
-            ParamKnob::new(cx, Data::params, |params| &params.osc2_tuning, Some("Tune"));
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_tuning_fine,
-                Some("Fine Tune"),
-            );
-        })
-        .class("row");
-
-        // warp adsr
-        HStack::new(cx, |cx| {
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_warp_attack,
-                Some("A"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_warp_decay,
-                Some("D"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_warp_sustain,
-                Some("S"),
-            );
-            ParamKnob::new(
-                cx,
-                Data::params,
-                |params| &params.osc2_warp_release,
-                Some("R"),
-            );
-        })
-        .class("row");
-    })
-    .class("section");
 }
 
 fn effects(cx: &mut Context) {
