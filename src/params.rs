@@ -56,7 +56,7 @@ pub struct OscillatorParams {
     #[id = "tuning-fine"]
     pub tuning_fine: FloatParam,
 
-    #[id = "table-id"]
+    #[id = "bank-id"]
     pub bank_id: EnumParam<WaveBank>,
 
 }
