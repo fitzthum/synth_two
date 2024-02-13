@@ -6,6 +6,7 @@ use crate::synth::envelope::{Envelope, ADSR};
 use crate::synth::oscillator::{Oscillator, WaveTableOscillator};
 use crate::synth::lfo::{Lfo, WaveTableLfo};
 use crate::SynthTwoParams;
+use crate::params::OscillatorParams;
 
 fn midi_note_to_freq(note: u8, tune: f64, tune_fine: f64) -> f64 {
     const A4_PITCH: i8 = 69;
@@ -92,14 +93,14 @@ impl Voice {
     pub fn process(&mut self) -> f64 {
         let ww1: f64 = self.plugin_params.osc1.wave_warp.value().into();
         let bwi1: f64 = self.plugin_params.osc1.wave_index.value().into();
-        let wi1 = bwi1 + ww1 * self.warp_envelope_1();
+        let wi1 = bwi1 + ww1 * Self::warp_envelope(self.plugin_params.osc1.clone(), &mut self.warp_envelope_1, self.time_since_on, self.time_off);
 
         self.oscillator1.set_wave_index(wi1);
         let o1 = self.oscillator1.process(self.time_since_on);
 
         let ww2: f64 = self.plugin_params.osc2.wave_warp.value().into();
         let bwi2: f64 = self.plugin_params.osc2.wave_index.value().into();
-        let wi2 = bwi2 + ww2 * self.warp_envelope_2();
+        let wi2 = bwi2 + ww2 * Self::warp_envelope(self.plugin_params.osc2.clone(), &mut self.warp_envelope_2, self.time_since_on, self.time_off);
 
         self.oscillator2.set_wave_index(wi2);
         let o2 = self.oscillator2.process(self.time_since_on);
@@ -120,28 +121,14 @@ impl Voice {
         ob * self.main_envelope() * self.velocity as f64
     }
 
-    fn warp_envelope_1(&mut self) -> f64 {
-        self.warp_envelope_1.update(
-            self.plugin_params.osc1.warp_attack.smoothed.next(),
-            self.plugin_params.osc1.warp_decay.smoothed.next(),
-            self.plugin_params.osc1.warp_sustain.smoothed.next(),
-            self.plugin_params.osc1.warp_release.smoothed.next(),
+    fn warp_envelope(params: Arc<OscillatorParams>, env: &mut ADSR, time_since_on: f64, time_off: f64) -> f64 {
+        env.update(
+            params.warp_attack.smoothed.next(),
+            params.warp_decay.smoothed.next(),
+            params.warp_sustain.smoothed.next(),
+            params.warp_release.smoothed.next(),
         );
-
-        self.warp_envelope_1
-            .process(self.time_since_on, self.time_off)
-    }
-
-    fn warp_envelope_2(&mut self) -> f64 {
-        self.warp_envelope_2.update(
-            self.plugin_params.osc2.warp_attack.smoothed.next(),
-            self.plugin_params.osc2.warp_decay.smoothed.next(),
-            self.plugin_params.osc2.warp_sustain.smoothed.next(),
-            self.plugin_params.osc2.warp_release.smoothed.next(),
-        );
-
-        self.warp_envelope_2
-            .process(self.time_since_on, self.time_off)
+        env.process(time_since_on, time_off)
     }
 
     fn main_envelope(&mut self) -> f64 {
