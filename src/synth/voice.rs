@@ -91,20 +91,21 @@ impl Voice {
     }
 
     pub fn process(&mut self) -> f64 {
-        let ww1: f64 = self.plugin_params.osc1.wave_warp.value().into();
-        let bwi1: f64 = self.plugin_params.osc1.wave_index.value().into();
-        let wi1 = bwi1 + ww1 * Self::warp_envelope(self.plugin_params.osc1.clone(), &mut self.warp_envelope_1, self.time_since_on, self.time_off);
-
-        self.oscillator1.set_wave_index(wi1);
+    
+        // generate sample for each oscillator
+        let wave_index = Self::wave_index(self.plugin_params.osc1.clone(), &mut self.warp_envelope_1, self.time_since_on, self.time_off);
+        
+        self.oscillator1.set_wave_index(wave_index);
         let o1 = self.oscillator1.process(self.time_since_on);
 
-        let ww2: f64 = self.plugin_params.osc2.wave_warp.value().into();
-        let bwi2: f64 = self.plugin_params.osc2.wave_index.value().into();
-        let wi2 = bwi2 + ww2 * Self::warp_envelope(self.plugin_params.osc2.clone(), &mut self.warp_envelope_2, self.time_since_on, self.time_off);
-
-        self.oscillator2.set_wave_index(wi2);
+        // second oscillator
+        let wave_index = Self::wave_index(self.plugin_params.osc2.clone(), &mut self.warp_envelope_2, self.time_since_on, self.time_off);
+        
+        self.oscillator2.set_wave_index(wave_index);
         let o2 = self.oscillator2.process(self.time_since_on);
 
+
+        // calculate oscillator balance
         let mut balance: f64 = self.plugin_params.oscillator_balance.smoothed.next().into();
         let balance_lfo_strength: f64 = self.plugin_params.oscillator_balance_lfo_strength.smoothed.next().into();
         
@@ -115,20 +116,30 @@ impl Voice {
         }
         balance = balance.min(1.0).max(0.0);
         
+        // mix oscillators together using balance
         let ob = (o2 * balance) + (o1 * (1.0 - balance));
 
+        // increment note time
         self.time_since_on += self.time_per_sample;
+
+        // apply main envelope
         ob * self.main_envelope() * self.velocity as f64
     }
 
-    fn warp_envelope(params: Arc<OscillatorParams>, env: &mut ADSR, time_since_on: f64, time_off: f64) -> f64 {
+    // Using the note timing information and the oscillator params,
+    // calculate the wave index for a given oscillator and note/voice
+    fn wave_index(params: Arc<OscillatorParams>, env: &mut ADSR, time_since_on: f64, time_off: f64) -> f64 {
+
+        let wave_warp: f64 = params.wave_warp.value().into();
+        let wave_index_start: f64 = params.wave_index.value().into();
+
         env.update(
             params.warp_attack.smoothed.next(),
             params.warp_decay.smoothed.next(),
             params.warp_sustain.smoothed.next(),
             params.warp_release.smoothed.next(),
         );
-        env.process(time_since_on, time_off)
+        wave_index_start + wave_warp * env.process(time_since_on, time_off)
     }
 
     fn main_envelope(&mut self) -> f64 {
