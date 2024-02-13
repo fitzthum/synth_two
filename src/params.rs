@@ -31,11 +31,11 @@ pub enum WaveBank {
 
 #[derive(Params)]
 pub struct OscillatorParams {
-    #[id = "wave-index"]
-    pub wave_index: FloatParam,
+    #[id = "wave-index-start"]
+    pub wave_index_start: FloatParam,
 
-    #[id = "wave-warp"]
-    pub wave_warp: FloatParam,
+    #[id = "wave-index-end"]
+    pub wave_index_end: FloatParam,
 
     //TODO: can i use double-nested params for this?
     #[id = "warp-attack"]
@@ -64,19 +64,19 @@ pub struct OscillatorParams {
 impl Default for OscillatorParams {
     fn default() -> Self {
         Self {
-            wave_index: FloatParam::new(
-                "Wave Index",
+            wave_index_start: FloatParam::new(
+                "Wave Index Start",
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 
             // this time we can scale this here rather than arithmetically later
-            wave_warp: FloatParam::new(
-                "Wave Warp",
-                0.0,
+            wave_index_end: FloatParam::new(
+                "Wave Index End",
+                0.75,
                 FloatRange::Linear {
-                    min: -1.0,
+                    min: 0.0,
                     max: 1.0,
                 },
             )

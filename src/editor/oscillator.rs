@@ -53,12 +53,12 @@ pub fn new<L, PsRef, Ps>(cx: &mut Context, params: L) -> Handle<'_, Self>
                 };
 
                 HStack::new(cx, |cx| {
-                    if let ParamPtr::FloatParam(ptr) = params_map.get("wave-index").unwrap().clone() {
-                        unsafe { ParamKnob::new(cx, params.clone(), move |_| &*ptr, Some("Index")) };
+                    if let ParamPtr::FloatParam(ptr) = params_map.get("wave-index-start").unwrap().clone() {
+                        unsafe { ParamKnob::new(cx, params.clone(), move |_| &*ptr, Some("Start")) };
                     };
 
-                    if let ParamPtr::FloatParam(ptr) = params_map.get("wave-warp").unwrap().clone() {
-                        unsafe { ParamKnob::new(cx, params.clone(), move |_| &*ptr, Some("Warp")) };
+                    if let ParamPtr::FloatParam(ptr) = params_map.get("wave-index-end").unwrap().clone() {
+                        unsafe { ParamKnob::new(cx, params.clone(), move |_| &*ptr, Some("End")) };
                     };
 
                     if let ParamPtr::FloatParam(ptr) = params_map.get("tuning").unwrap().clone() {

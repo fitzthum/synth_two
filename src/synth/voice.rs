@@ -130,8 +130,9 @@ impl Voice {
     // calculate the wave index for a given oscillator and note/voice
     fn wave_index(params: Arc<OscillatorParams>, env: &mut ADSR, time_since_on: f64, time_off: f64) -> f64 {
 
-        let wave_warp: f64 = params.wave_warp.value().into();
-        let wave_index_start: f64 = params.wave_index.value().into();
+        let wave_index_start: f64 = params.wave_index_start.value().into();
+        let wave_index_end: f64 = params.wave_index_end.value().into();
+        let wave_warp = wave_index_end - wave_index_start;
 
         env.update(
             params.warp_attack.smoothed.next(),
