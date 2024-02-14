@@ -92,7 +92,9 @@ impl Synth {
         }
 
         let out = self.filter.process(out);
-        self.reverb.as_mut().unwrap().process(out)
+        let reverb = self.reverb.as_mut().unwrap().process(out);
+
+        out + reverb * self.plugin_params.reverb_volume.smoothed.next()
     }
 
     // any components that need some re-initialization based on param changes

@@ -199,6 +199,9 @@ pub struct SynthTwoParams {
 
     #[id = "lfo1-index"]
     pub lfo1_index: FloatParam,
+
+    #[id = "reverb-volume"]
+    pub reverb_volume: FloatParam,
 }
 
 impl Default for SynthTwoParams {
@@ -336,6 +339,14 @@ impl Default for SynthTwoParams {
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            reverb_volume: FloatParam::new(
+                "Reverb Volume",
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
         }
     }
 }

@@ -73,8 +73,7 @@ impl Reverb {
         let wet = self.delay2.process(self.apf2.process(wet));
         let wet = self.delay3.process(self.apf3.process(wet));
 
-        // move this outside of the reverb module
-        wet * 0.5 + sample * 0.5
+        wet
 
     }
 }

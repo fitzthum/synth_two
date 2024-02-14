@@ -161,6 +161,7 @@ fn effects(cx: &mut Context) {
     HStack::new(cx, |cx| {
         filter(cx);
         lfo1(cx);
+        reverb(cx);
     })
     .id("effects");
 }
@@ -206,6 +207,24 @@ fn lfo1(cx: &mut Context) {
                 WaveGraph::new(cx, Data::lfo1_samples).class("graph");
             })
             .class("graph-wrapper");
+        })
+        .class("row");
+    })
+    .class("section")
+    .right(Stretch(1.0));
+}
+
+fn reverb(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "Reverb").class("section-title");
+
+        HStack::new(cx, |cx| {
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_volume,
+                Some("Volume"),
+            );
         })
         .class("row");
     })
