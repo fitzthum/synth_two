@@ -95,6 +95,30 @@ impl<T: SimdType> BiquadCoefficients<T> {
 
         Self::from_f32s(BiquadCoefficients { b0, b1, b2, a1, a2 })
     }
+
+    pub fn allpass(sample_rate: f32, frequency: f32, q: f32) -> Self {
+        nih_debug_assert!(sample_rate > 0.0);
+        nih_debug_assert!(frequency > 0.0);
+        nih_debug_assert!(frequency < sample_rate / 2.0);
+        nih_debug_assert!(q > 0.0);
+
+        let omega0 = consts::TAU * (frequency / sample_rate);
+        let cos_omega0 = omega0.cos();
+        let alpha = omega0.sin() / (2.0 * q);
+
+        // We'll prenormalize everything with a0
+        // (divide everything by a0)
+        // this is why we can skip a0 in the biquad coefficients
+        let a0 = 1.0 + alpha;
+        let b0 = (1.0 - alpha) / a0;
+        let b1 = (-2.0 * cos_omega0) / a0;
+        let b2 = (1.0 + alpha) / a0;
+        let a1 = (-2.0 * cos_omega0) / a0;
+        let a2 = (1.0 - alpha) / a0;
+
+        Self::from_f32s(BiquadCoefficients { b0, b1, b2, a1, a2 })
+    }
+
 }
 
 impl SimdType for f32 {

@@ -16,6 +16,9 @@ use spectrum::SpectrumCalculator;
 mod lfo;
 use lfo::{Lfo, WaveTableLfo};
 
+mod reverb;
+use reverb::Reverb;
+
 use crate::params::{FILTER_CUTOFF_MAX, FILTER_CUTOFF_MIN};
 use crate::SynthTwoParams;
 
@@ -32,6 +35,7 @@ pub struct Synth {
 
     filter: Biquad<f32>,
     lfo1: Option<Arc<Mutex<WaveTableLfo>>>,
+    reverb: Option<Reverb>,
 }
 
 impl Synth {
@@ -47,6 +51,7 @@ impl Synth {
 
             filter: Biquad::default(),
             lfo1: None,
+            reverb: None,
         }
     }
     pub fn initialize(
@@ -73,6 +78,8 @@ impl Synth {
             lfo1_period,
             lfo1_samples,
         ))));
+
+        self.reverb = Some(Reverb::new(sample_rate as f32));
     }
 
     // we're doing fake stereo at first
@@ -84,7 +91,8 @@ impl Synth {
             out += voice.process() as f32;
         }
 
-        self.filter.process(out)
+        let out = self.filter.process(out);
+        self.reverb.as_mut().unwrap().process(out)
     }
 
     // any components that need some re-initialization based on param changes
