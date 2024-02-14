@@ -6,36 +6,75 @@ use crate::synth::filter::{Biquad, BiquadCoefficients};
 const BUFFER_SIZE: i32 = 100000;
 
 pub struct Reverb {
-    apf: Biquad<f32>,
-    delay: Delay, 
+    apf1: Biquad<f32>,
+    delay1: Delay,
+
+    apf2: Biquad<f32>,
+    delay2: Delay,
+
+    apf3: Biquad<f32>,
+    delay3: Delay,
+
 }
 
 impl Reverb {
     pub fn new(sample_rate: f32) -> Self {
         
-        // no idea how to set these
+        // maaaagic numbers
         let frequency = 1000.0;
         let q = 2.0;
         let delay_samples = 6000;
         let feedback_level = 0.3;
-        
-        let mut apf = Biquad::default();
-        apf.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+
+        let mut apf1 = Biquad::default();
+        apf1.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+
+        let delay1 = Delay::new(delay_samples, feedback_level);
+
+
+        // a second loop
+        let frequency = 700.0;
+        let q = 1.0;
+        let delay_samples = 2000;
+        let feedback_level = 0.2;
+
+        let mut apf2 = Biquad::default();
+        apf2.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+
+        let delay2 = Delay::new(delay_samples, feedback_level);
+
+
+        // a third loop, wait this is synth two....
+        let frequency = 1400.0;
+        let q = 3.0;
+        let delay_samples = 400;
+        let feedback_level = 0.6;
+
+        let mut apf3 = Biquad::default();
+        apf3.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+
+        let delay3 = Delay::new(delay_samples, feedback_level);
+
 
         Self {
-            apf,
-            delay: Delay::new(delay_samples, feedback_level),
+            apf1,
+            delay1,
+            apf2,
+            delay2,
+            apf3,
+            delay3,
         }
 
     }
 
-    // only returns the wet signal
-    // or do we need to combine this with the original (i think so)
     pub fn process(&mut self, sample: f32) -> f32 {
-        //0.5 * sample + 0.5 * self.apf.process(self.delay.process(sample)) 
-        let wet = self.delay.process(self.apf.process(sample));
+
+        let wet = self.delay1.process(self.apf1.process(sample));
+        let wet = self.delay2.process(self.apf2.process(wet));
+        let wet = self.delay3.process(self.apf3.process(wet));
+
+        // move this outside of the reverb module
         wet * 0.5 + sample * 0.5
-        //self.apf.process(sample) 
 
     }
 }
