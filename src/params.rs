@@ -202,6 +202,18 @@ pub struct SynthTwoParams {
 
     #[id = "reverb-volume"]
     pub reverb_volume: FloatParam,
+
+    #[id = "reverb-time"]
+    pub reverb_delay: FloatParam,
+
+    #[id = "reverb-feedback"]
+    pub reverb_feedback: FloatParam,
+
+    #[id = "reverb-color"]
+    pub reverb_color: FloatParam,
+
+    #[id = "reverb-q"]
+    pub reverb_q: FloatParam,
 }
 
 impl Default for SynthTwoParams {
@@ -344,6 +356,34 @@ impl Default for SynthTwoParams {
                 "Reverb Volume",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            reverb_delay: FloatParam::new(
+                "Reverb Delay",
+                2000.0,
+                FloatRange::Linear { min: 1600.0, max: 40000.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            reverb_feedback: FloatParam::new(
+                "Reverb Feedback",
+                0.4,
+                FloatRange::Linear { min: 0.2, max: 0.6 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            reverb_color: FloatParam::new(
+                "Reverb Color",
+                1000.0,
+                FloatRange::Linear { min: 300.0, max: 20000.0 },
+            )
+            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            reverb_q: FloatParam::new(
+                "Reverb Q",
+                0.5,
+                FloatRange::Linear { min: 0.001, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
 

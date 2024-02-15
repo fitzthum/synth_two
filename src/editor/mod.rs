@@ -225,8 +225,39 @@ fn reverb(cx: &mut Context) {
                 |params| &params.reverb_volume,
                 Some("Volume"),
             );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_delay,
+                Some("Delay"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_feedback,
+                Some("Feedback"),
+            );
+
         })
         .class("row");
+
+        HStack::new(cx, |cx| {
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_color,
+                Some("Color"),
+            );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_q,
+                Some("Q"),
+            );
+        })
+        .class("row");
+
+
     })
     .class("section")
     .right(Stretch(1.0));

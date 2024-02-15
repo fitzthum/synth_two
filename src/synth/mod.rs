@@ -139,6 +139,19 @@ impl Synth {
                 lfo.generate_samples();
             }
         }
+
+        // reverb
+        if self.plugin_params.reverb_delay.smoothed.is_smoothing()
+            || self.plugin_params.reverb_feedback.smoothed.is_smoothing()
+            || self.plugin_params.reverb_color.smoothed.is_smoothing()
+            || self.plugin_params.reverb_q.smoothed.is_smoothing()
+        {
+            self.reverb.as_mut().unwrap().update(
+                self.plugin_params.reverb_delay.smoothed.next() as i32,
+                self.plugin_params.reverb_feedback.smoothed.next(),
+                self.plugin_params.reverb_color.smoothed.next(),
+                self.plugin_params.reverb_q.smoothed.next());
+        }
     }
 
     fn update_filter(&mut self) {
