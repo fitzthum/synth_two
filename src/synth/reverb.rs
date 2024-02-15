@@ -102,7 +102,7 @@ impl Reverb {
 
     }
 
-    pub fn process(&mut self, sample: f32) -> f32 {
+    pub fn process(&mut self, sample: f32) -> (f32, f32) {
 
         let delayed = self.delay1.process(sample);
         let wet = 0.5 * self.apf1.process(delayed) + 0.5 * delayed;
@@ -113,7 +113,7 @@ impl Reverb {
         let delayed = self.delay3.process(wet);
         let wet = 0.5 * self.apf3.process(delayed) + 0.5 * delayed;
 
-        wet
+        (wet, wet)
 
     }
 }

@@ -137,7 +137,7 @@ impl Plugin for SynthTwo {
 
         const GRAPH_SAMPLE_RATIO: usize = 4;
         let mut graph_samples = vec![];
-        for (n, channel_samples) in buffer.iter_samples().enumerate() {
+        for (n, mut channel_samples) in buffer.iter_samples().enumerate() {
             // process midi events
             while let Some(event) = next_event {
                 match event {
@@ -155,14 +155,14 @@ impl Plugin for SynthTwo {
             // Smoothing is optionally built into the parameters themselves
             let gain = self.params.gain.smoothed.next();
 
-            let output_sample = self.synth.process_sample();
+            let (output_sample_l, output_sample_r) = self.synth.process_sample();
 
-            for sample in channel_samples {
-                *sample = output_sample * gain;
-            }
+            *channel_samples.get_mut(0).unwrap() = output_sample_l * gain;
+            *channel_samples.get_mut(1).unwrap() = output_sample_r * gain;
 
             if n % GRAPH_SAMPLE_RATIO == 0 {
-                graph_samples.push(output_sample);
+                // i guess we are only  analyzing one channel
+                graph_samples.push(output_sample_l);
             }
 
             // clear out unused voices

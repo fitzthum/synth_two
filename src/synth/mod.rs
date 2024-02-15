@@ -83,7 +83,7 @@ impl Synth {
     }
 
     // we're doing fake stereo at first
-    pub fn process_sample(&mut self) -> f32 {
+    pub fn process_sample(&mut self) -> (f32, f32) {
         self.update_components();
 
         let mut out = 0.0;
@@ -92,9 +92,12 @@ impl Synth {
         }
 
         let out = self.filter.process(out);
-        let reverb = self.reverb.as_mut().unwrap().process(out);
+        let (reverb_l, reverb_r) = self.reverb.as_mut().unwrap().process(out);
 
-        out + reverb * self.plugin_params.reverb_volume.smoothed.next()
+        let out_l = out + reverb_l * self.plugin_params.reverb_volume.smoothed.next();
+        let out_r = out + reverb_r * self.plugin_params.reverb_volume.smoothed.next();
+
+        (out_l, out_r)
     }
 
     // any components that need some re-initialization based on param changes
