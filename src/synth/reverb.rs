@@ -3,19 +3,25 @@
 
 use crate::synth::filter::{Biquad, BiquadCoefficients};
 
-const BUFFER_SIZE: i32 = 100000;
+const BUFFER_SIZE: i32 = 48000;
 
 pub struct Reverb {
     sample_rate: f32,
 
-    apf1: Biquad<f32>,
-    delay1: Delay,
+    apf1_l: Biquad<f32>,
+    apf1_r: Biquad<f32>,
+    delay1_l: Delay,
+    delay1_r: Delay,
 
-    apf2: Biquad<f32>,
-    delay2: Delay,
+    apf2_l: Biquad<f32>,
+    apf2_r: Biquad<f32>,
+    delay2_l: Delay,
+    delay2_r: Delay,
 
-    apf3: Biquad<f32>,
-    delay3: Delay,
+    apf3_l: Biquad<f32>,
+    apf3_r: Biquad<f32>,
+    delay3_l: Delay,
+    delay3_r: Delay,
 
 }
 
@@ -28,10 +34,13 @@ impl Reverb {
         let delay_samples = 6000;
         let feedback_level = 0.4;
 
-        let mut apf1 = Biquad::default();
-        apf1.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        let mut apf1_l = Biquad::default();
+        let mut apf1_r = Biquad::default();
+        apf1_l.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        apf1_r.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
 
-        let delay1 = Delay::new(delay_samples, feedback_level);
+        let delay1_l = Delay::new(delay_samples, feedback_level);
+        let delay1_r = Delay::new(delay_samples, feedback_level);
 
 
         // a second loop
@@ -40,10 +49,13 @@ impl Reverb {
         let delay_samples = 2000;
         let feedback_level = 0.2;
 
-        let mut apf2 = Biquad::default();
-        apf2.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        let mut apf2_l = Biquad::default();
+        let mut apf2_r = Biquad::default();
+        apf2_l.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        apf2_r.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
 
-        let delay2 = Delay::new(delay_samples, feedback_level);
+        let delay2_l = Delay::new(delay_samples, feedback_level);
+        let delay2_r = Delay::new(delay_samples, feedback_level);
 
 
         // a third loop, wait this is synth two....
@@ -52,20 +64,29 @@ impl Reverb {
         let delay_samples = 400;
         let feedback_level = 0.6;
 
-        let mut apf3 = Biquad::default();
-        apf3.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        let mut apf3_l = Biquad::default();
+        let mut apf3_r = Biquad::default();
+        apf3_l.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
+        apf3_r.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
 
-        let delay3 = Delay::new(delay_samples, feedback_level);
+        let delay3_l = Delay::new(delay_samples, feedback_level);
+        let delay3_r = Delay::new(delay_samples, feedback_level);
 
 
         Self {
             sample_rate,
-            apf1,
-            delay1,
-            apf2,
-            delay2,
-            apf3,
-            delay3,
+            apf1_l,
+            apf1_r,
+            delay1_l,
+            delay1_r,
+            apf2_l,
+            apf2_r,
+            delay2_l,
+            delay2_r,
+            apf3_l,
+            apf3_r,
+            delay3_l,
+            delay3_r,
         }
 
     }
@@ -77,8 +98,10 @@ impl Reverb {
         let delay_samples = delay_samples_new + 4000;
         let feedback_level = feedback_level_new;
 
-        self.apf1.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
-        self.delay1.update(delay_samples, feedback_level);
+        self.apf1_l.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.apf1_r.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.delay1_l.update(delay_samples, feedback_level);
+        self.delay1_r.update(delay_samples, feedback_level);
 
 
         // a second loop
@@ -87,8 +110,10 @@ impl Reverb {
         let delay_samples = delay_samples_new;
         let feedback_level = feedback_level_new - 0.2;
 
-        self.apf2.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
-        self.delay2.update(delay_samples, feedback_level);
+        self.apf2_l.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.apf2_r.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.delay2_l.update(delay_samples, feedback_level);
+        self.delay2_r.update(delay_samples, feedback_level);
 
 
         // a third loop, wait this is synth two....
@@ -97,23 +122,31 @@ impl Reverb {
         let delay_samples = delay_samples_new - 1600;
         let feedback_level = feedback_level_new + 0.2;
 
-        self.apf3.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
-        self.delay3.update(delay_samples, feedback_level);
+        self.apf3_l.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.apf3_r.coefficients = BiquadCoefficients::allpass(self.sample_rate, frequency, q);
+        self.delay3_l.update(delay_samples, feedback_level);
+        self.delay3_r.update(delay_samples, feedback_level);
 
     }
 
     pub fn process(&mut self, sample: f32) -> (f32, f32) {
 
-        let delayed = self.delay1.process(sample);
-        let wet = 0.5 * self.apf1.process(delayed) + 0.5 * delayed;
+        let delayed_l = self.delay1_l.process(sample);
+        let delayed_r = self.delay3_r.process(sample);
+        let wet_l = 0.5 * self.apf1_l.process(delayed_l) + 0.5 * delayed_l;
+        let wet_r = 0.5 * self.apf3_r.process(delayed_r) + 0.5 * delayed_r;
 
-        let delayed = self.delay2.process(wet);
-        let wet = 0.5 * self.apf2.process(delayed) + 0.5 * delayed;
+        let delayed_l = self.delay2_l.process(wet_l);
+        let delayed_r = self.delay2_r.process(wet_r);
+        let wet_l = 0.5 * self.apf2_l.process(delayed_l) + 0.5 * delayed_l;
+        let wet_r = 0.5 * self.apf2_r.process(delayed_r) + 0.5 * delayed_r;
 
-        let delayed = self.delay3.process(wet);
-        let wet = 0.5 * self.apf3.process(delayed) + 0.5 * delayed;
+        let delayed_l = self.delay3_l.process(wet_l);
+        let delayed_r = self.delay1_r.process(wet_r);
+        let wet_l = 0.5 * self.apf3_l.process(delayed_l) + 0.5 * delayed_l;
+        let wet_r = 0.5 * self.apf1_r.process(delayed_r) + 0.5 * delayed_r;
 
-        (wet, wet)
+        (wet_l, wet_r)
 
     }
 }
