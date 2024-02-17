@@ -89,46 +89,50 @@ impl PresetMenu {
             new_preset_name: "".to_string(),
 			selected_preset: preset_names[0].clone(),
         }.build(cx, |cx| {
-                HStack::new(cx, |cx| {
-                    Label::new(cx, "Presets");
-                    // some kind of dropdown thing here
-                    ScrollView::new(cx, 0.0, 0.0, false, true, |cx| {
-                        VStack::new(cx, |cx| {
-                            for preset_name in preset_names {
-                                // TODO: check if this is the one that we
-                                // have selected and change the class
-                                Label::new(cx, &preset_name)
-                                    .on_press(move |cx| cx.emit(PresetMenuEvent::UpdatePresetSelection(preset_name.clone())));
-                            }
+                VStack::new(cx, |cx| {
+                    HStack::new(cx, |cx| {
+                        Label::new(cx, "Presets");
+                        // some kind of dropdown thing here
+                        ScrollView::new(cx, 0.0, 0.0, false, true, |cx| {
+                            VStack::new(cx, |cx| {
+                                for preset_name in preset_names {
+                                    // TODO: check if this is the one that we
+                                    // have selected and change the class
+                                    Label::new(cx, &preset_name)
+                                        .on_press(move |cx| cx.emit(PresetMenuEvent::UpdatePresetSelection(preset_name.clone())));
+                                }
 
-                        });
+                            });
+                        })
+                        .class("dropdown");
+
+                        Button::new(
+                            cx,
+                            |ex| ex.emit(PresetMenuEvent::LoadPreset),
+                            |cx| Label::new(cx, "Load")
+                        );
+
+
+                        Textbox::new(cx, PresetMenu::new_preset_name)
+                            .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
+                            .on_build(|cx| {
+                                cx.emit(TextEvent::StartEdit);
+                                cx.emit(TextEvent::SelectAll);
+                            })
+                            .id("preset-name-box");
+
+                        Button::new(
+                            cx,
+                            |ex| ex.emit(PresetMenuEvent::SavePreset),
+                            |cx| Label::new(cx, "Save")
+                        );
+
                     })
-                    .class("dropdown")
-                    .width(Pixels(100.0));
-
-					Button::new(
-						cx,
-						|ex| ex.emit(PresetMenuEvent::LoadPreset),
-						|cx| Label::new(cx, "Load")
-					);
-
-
-                    Textbox::new(cx, PresetMenu::new_preset_name)
-                        .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
-                        .width(Pixels(200.0))
-                        .on_build(|cx| {
-                            cx.emit(TextEvent::StartEdit);
-                            cx.emit(TextEvent::SelectAll);
-                        });
-					Button::new(
-						cx,
-						|ex| ex.emit(PresetMenuEvent::SavePreset),
-						|cx| Label::new(cx, "Save")
-					);
-
+                    .class("row")
+                    .col_between(Pixels(30.0));
                 })
                 .class("section")
-                .col_between(Pixels(30.0));
+                .id("preset-browser");
             })
     }
 }

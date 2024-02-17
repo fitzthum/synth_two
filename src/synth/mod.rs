@@ -85,6 +85,8 @@ impl Synth {
             lfo1_samples,
         ))));
 
+        self.lfo1.as_mut().unwrap().lock().unwrap().generate_samples();
+
         self.reverb = Some(Reverb::new(sample_rate as f32));
         self.drive = Some(Drive::new());
     }
@@ -150,14 +152,14 @@ impl Synth {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 let mut lfo = lfo1.lock().unwrap();
                 lfo.set_period(self.plugin_params.lfo1_period.smoothed.next());
-                //lfo.generate_samples();
+                lfo.generate_samples();
             }
         }
         if self.plugin_params.lfo1_index.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 let mut lfo = lfo1.lock().unwrap();
                 lfo.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
-                //lfo.generate_samples();
+                lfo.generate_samples();
             }
         }
 
