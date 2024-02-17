@@ -159,10 +159,10 @@ fn oscillators(cx: &mut Context) {
 
 fn effects(cx: &mut Context) {
     HStack::new(cx, |cx| {
-        filter(cx);
         lfo1(cx);
-        reverb(cx);
+        filter(cx);
         drive(cx);
+        reverb(cx);
     })
     .id("effects");
 }
