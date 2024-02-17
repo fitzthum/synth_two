@@ -150,14 +150,14 @@ impl Synth {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 let mut lfo = lfo1.lock().unwrap();
                 lfo.set_period(self.plugin_params.lfo1_period.smoothed.next());
-                lfo.generate_samples();
+                //lfo.generate_samples();
             }
         }
         if self.plugin_params.lfo1_index.smoothed.is_smoothing() {
             if let Some(lfo1) = self.lfo1.as_mut() {
                 let mut lfo = lfo1.lock().unwrap();
                 lfo.set_index(self.plugin_params.lfo1_index.smoothed.next().into());
-                lfo.generate_samples();
+                //lfo.generate_samples();
             }
         }
 
@@ -166,14 +166,23 @@ impl Synth {
             || self.plugin_params.reverb_feedback.smoothed.is_smoothing()
             || self.plugin_params.reverb_color.smoothed.is_smoothing()
             || self.plugin_params.reverb_q.smoothed.is_smoothing()
+            || self.plugin_params.reverb_lfo.smoothed.next() > 0.01
         {
+            let mut delay = self.plugin_params.reverb_delay.smoothed.next();
+            
+            if self.plugin_params.reverb_lfo.smoothed.next() > 0.01 {
+                let lfo_value = self.lfo1.as_mut().unwrap().lock().unwrap().amplitude();
+                delay = (delay + (lfo_value * 40000.0) as i32).min(40000);
+            }
+
             self.reverb.as_mut().unwrap().update(
-                self.plugin_params.reverb_delay.smoothed.next() as i32,
+                delay,
                 self.plugin_params.reverb_feedback.smoothed.next(),
                 self.plugin_params.reverb_color.smoothed.next(),
                 self.plugin_params.reverb_q.smoothed.next());
         }
     }
+
 
     fn update_filter(&mut self) {
         let mut cutoff = self.plugin_params.filter_cutoff.smoothed.next();

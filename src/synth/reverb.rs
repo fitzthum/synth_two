@@ -29,9 +29,9 @@ impl Reverb {
     pub fn new(sample_rate: f32) -> Self {
         
         // maaaagic numbers
-        let frequency = 1000.0;
-        let q = 0.05;
-        let delay_samples = 6000;
+        let frequency = 8000.0;
+        let q = 0.5;
+        let delay_samples = 2000;
         let feedback_level = 0.4;
 
         let mut apf1_l = Biquad::default();

@@ -255,6 +255,13 @@ fn reverb(cx: &mut Context) {
                 |params| &params.reverb_q,
                 Some("Q"),
             );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.reverb_lfo,
+                Some("???"),
+            );
+
         })
         .class("row");
 

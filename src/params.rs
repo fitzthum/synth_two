@@ -204,7 +204,7 @@ pub struct SynthTwoParams {
     pub reverb_volume: FloatParam,
 
     #[id = "reverb-time"]
-    pub reverb_delay: FloatParam,
+    pub reverb_delay: IntParam,
 
     #[id = "reverb-feedback"]
     pub reverb_feedback: FloatParam,
@@ -214,6 +214,9 @@ pub struct SynthTwoParams {
 
     #[id = "reverb-q"]
     pub reverb_q: FloatParam,
+
+    #[id = "reverb-lfo"]
+    pub reverb_lfo: FloatParam,
 
     #[id = "drive-level"]
     pub drive_level: FloatParam,
@@ -367,10 +370,10 @@ impl Default for SynthTwoParams {
             )
             .with_smoother(SmoothingStyle::Exponential(50.0)),
 
-            reverb_delay: FloatParam::new(
+            reverb_delay: IntParam::new(
                 "Reverb Delay",
-                2000.0,
-                FloatRange::Linear { min: 1600.0, max: 40000.0 },
+                2000,
+                IntRange::Linear { min: 1600, max: 40000 },
             )
             .with_smoother(SmoothingStyle::Exponential(50.0)),
 
@@ -383,7 +386,7 @@ impl Default for SynthTwoParams {
 
             reverb_color: FloatParam::new(
                 "Reverb Color",
-                1000.0,
+                8000.0,
                 FloatRange::Linear { min: 300.0, max: 20000.0 },
             )
             .with_smoother(SmoothingStyle::Linear(50.0)),
@@ -392,6 +395,13 @@ impl Default for SynthTwoParams {
                 "Reverb Q",
                 0.5,
                 FloatRange::Linear { min: 0.01, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Linear(50.0)),
+
+            reverb_lfo: FloatParam::new(
+                "Reverb LFO",
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Linear(50.0)),
 
