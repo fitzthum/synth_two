@@ -85,7 +85,7 @@ impl Lfo for WaveTableLfo {
         let mut graph_samples = vec![];
 
         // let's try to calculate the minimum to make a decent looking graph
-        let num_samples = 512;
+        let num_samples = 128;
 
         let time_per_sample = (LFO_PERIOD_MAX / 512.0) as f64;
 
