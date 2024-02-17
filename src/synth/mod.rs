@@ -163,6 +163,7 @@ impl Synth {
 
         // reverb
         if self.plugin_params.reverb_delay.smoothed.is_smoothing()
+            || self.plugin_params.reverb_volume.smoothed.is_smoothing()
             || self.plugin_params.reverb_feedback.smoothed.is_smoothing()
             || self.plugin_params.reverb_color.smoothed.is_smoothing()
             || self.plugin_params.reverb_q.smoothed.is_smoothing()

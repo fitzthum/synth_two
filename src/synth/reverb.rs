@@ -29,6 +29,8 @@ impl Reverb {
     pub fn new(sample_rate: f32) -> Self {
         
         // maaaagic numbers
+        // actually these are just placeholders
+        // the real values will be set the first time we call update() :'(
         let frequency = 8000.0;
         let q = 0.5;
         let delay_samples = 2000;
@@ -42,13 +44,6 @@ impl Reverb {
         let delay1_l = Delay::new(delay_samples, feedback_level);
         let delay1_r = Delay::new(delay_samples, feedback_level);
 
-
-        // a second loop
-        let frequency = 700.0;
-        let q = 0.05;
-        let delay_samples = 2000;
-        let feedback_level = 0.2;
-
         let mut apf2_l = Biquad::default();
         let mut apf2_r = Biquad::default();
         apf2_l.coefficients = BiquadCoefficients::allpass(sample_rate, frequency, q);
@@ -56,13 +51,6 @@ impl Reverb {
 
         let delay2_l = Delay::new(delay_samples, feedback_level);
         let delay2_r = Delay::new(delay_samples, feedback_level);
-
-
-        // a third loop, wait this is synth two....
-        let frequency = 1400.0;
-        let q = 0.05;
-        let delay_samples = 400;
-        let feedback_level = 0.6;
 
         let mut apf3_l = Biquad::default();
         let mut apf3_r = Biquad::default();
