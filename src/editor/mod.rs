@@ -38,7 +38,7 @@ impl Model for Data {}
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<ViziaState> {
-    ViziaState::new(|| (1000, 710))
+    ViziaState::new(|| (1500, 1000))
 }
 
 pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dyn Editor>> {
@@ -162,6 +162,7 @@ fn effects(cx: &mut Context) {
         filter(cx);
         lfo1(cx);
         reverb(cx);
+        drive(cx);
     })
     .id("effects");
 }
@@ -258,6 +259,25 @@ fn reverb(cx: &mut Context) {
         .class("row");
 
 
+    })
+    .class("section")
+    .right(Stretch(1.0));
+}
+
+fn drive(cx: &mut Context) {
+    VStack::new(cx, |cx| {
+        Label::new(cx, "???").class("section-title");
+
+        HStack::new(cx, |cx| {
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.drive_level,
+                Some("?"),
+            );
+
+        })
+        .class("row");
     })
     .class("section")
     .right(Stretch(1.0));

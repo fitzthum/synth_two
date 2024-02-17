@@ -214,6 +214,10 @@ pub struct SynthTwoParams {
 
     #[id = "reverb-q"]
     pub reverb_q: FloatParam,
+
+    #[id = "drive-steepness"]
+    pub drive_level: FloatParam,
+
 }
 
 impl Default for SynthTwoParams {
@@ -386,6 +390,13 @@ impl Default for SynthTwoParams {
                 FloatRange::Linear { min: 0.001, max: 1.0 },
             )
             .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+
+            drive_level: FloatParam::new(
+                "Drive",
+                0.0,
+                FloatRange::Linear { min: 0.0, max: 1.0 },
+            )
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
         }
     }

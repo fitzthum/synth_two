@@ -6,6 +6,7 @@ use voice::Voice;
 
 mod envelope;
 mod oscillator;
+mod delay;
 
 mod filter;
 use filter::{Biquad, BiquadCoefficients};
@@ -18,6 +19,9 @@ use lfo::{Lfo, WaveTableLfo};
 
 mod reverb;
 use reverb::Reverb;
+
+mod drive;
+use drive::Drive;
 
 use crate::params::{FILTER_CUTOFF_MAX, FILTER_CUTOFF_MIN};
 use crate::SynthTwoParams;
@@ -36,6 +40,7 @@ pub struct Synth {
     filter: Biquad<f32>,
     lfo1: Option<Arc<Mutex<WaveTableLfo>>>,
     reverb: Option<Reverb>,
+    drive: Option<Drive>,
 }
 
 impl Synth {
@@ -52,6 +57,7 @@ impl Synth {
             filter: Biquad::default(),
             lfo1: None,
             reverb: None,
+            drive: None,
         }
     }
     pub fn initialize(
@@ -80,6 +86,7 @@ impl Synth {
         ))));
 
         self.reverb = Some(Reverb::new(sample_rate as f32));
+        self.drive = Some(Drive::new());
     }
 
     // we're doing fake stereo at first
@@ -92,6 +99,10 @@ impl Synth {
         }
 
         let out = self.filter.process(out);
+
+        let mys_level = self.plugin_params.drive_level.smoothed.next();
+        let out = out * (1.0 - mys_level) + mys_level * self.drive.as_mut().unwrap().process(out);
+
         let (reverb_l, reverb_r) = self.reverb.as_mut().unwrap().process(out);
 
         let out_l = out + reverb_l * self.plugin_params.reverb_volume.smoothed.next();

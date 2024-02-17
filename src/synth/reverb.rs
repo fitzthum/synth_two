@@ -2,8 +2,8 @@
 //
 
 use crate::synth::filter::{Biquad, BiquadCoefficients};
+use crate::synth::delay::Delay;
 
-const BUFFER_SIZE: i32 = 48000;
 
 pub struct Reverb {
     sample_rate: f32,
@@ -147,51 +147,6 @@ impl Reverb {
         let wet_r = 0.5 * self.apf1_r.process(delayed_r) + 0.5 * delayed_r;
 
         (wet_l, wet_r)
-
-    }
-}
-
-
-pub struct Delay {
-    buffer: [f32; BUFFER_SIZE as usize],
-    buffer_index: i32,
-    delay_samples: i32,
-    feedback_level: f32,
-
-}
-
-impl Delay {
-    pub fn new(delay_samples: i32, feedback_level: f32) -> Self {
-        Self {
-            // probably makes sense to start with a buffer of 0.0
-            buffer: [0.0; BUFFER_SIZE as usize],
-            buffer_index: 0,
-            delay_samples,
-            feedback_level,
-        }
-
-    }
-
-    pub fn update(&mut self, delay_samples: i32, feedback_level: f32) {
-        self.delay_samples = delay_samples;
-        self.feedback_level = feedback_level;
-
-    }
-
-    pub fn process(&mut self, sample: f32) -> f32 {
-        // get the previous sample
-        let out = self.buffer[self.buffer_bounds(self.buffer_index - self.delay_samples)];
-
-        // update the buffer
-        self.buffer[self.buffer_bounds(self.buffer_index)] = sample + out * self.feedback_level;
-        self.buffer_index = self.buffer_bounds(self.buffer_index + 1) as i32; 
-        
-        out
-
-    }
-
-    fn buffer_bounds(&self, index: i32) -> usize {
-        (((index % BUFFER_SIZE) + BUFFER_SIZE) % BUFFER_SIZE) as usize
 
     }
 }
