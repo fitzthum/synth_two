@@ -273,8 +273,15 @@ fn drive(cx: &mut Context) {
                 cx,
                 Data::params,
                 |params| &params.drive_level,
-                Some("?"),
+                Some("Level"),
             );
+            ParamKnob::new(
+                cx,
+                Data::params,
+                |params| &params.drive_lfo,
+                Some("LFO"),
+            );
+
 
         })
         .class("row");

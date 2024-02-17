@@ -100,8 +100,15 @@ impl Synth {
 
         let out = self.filter.process(out);
 
-        let mys_level = self.plugin_params.drive_level.smoothed.next();
-        let out = out * (1.0 - mys_level) + mys_level * self.drive.as_mut().unwrap().process(out);
+        // drive
+        let mut drive_level = self.plugin_params.drive_level.smoothed.next();
+        let drive_lfo = self.plugin_params.drive_lfo.smoothed.next();
+        if drive_lfo > 0.0 {
+            let lfo_value = self.lfo1.as_mut().unwrap().lock().unwrap().amplitude() as f32;
+            drive_level = (drive_level + lfo_value * drive_level).min(1.0).max(0.0);
+
+        }
+        let out = out * (1.0 - drive_level) + drive_level * self.drive.as_mut().unwrap().process(out);
 
         let (reverb_l, reverb_r) = self.reverb.as_mut().unwrap().process(out);
 
