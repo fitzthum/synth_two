@@ -69,7 +69,7 @@ impl Default for OscillatorParams {
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             // this time we can scale this here rather than arithmetically later
             wave_index_end: FloatParam::new(
@@ -80,7 +80,7 @@ impl Default for OscillatorParams {
                     max: 1.0,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             warp_attack: FloatParam::new(
                 "Warp Attack",
@@ -90,7 +90,7 @@ impl Default for OscillatorParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             warp_decay: FloatParam::new(
@@ -101,7 +101,7 @@ impl Default for OscillatorParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             warp_sustain: FloatParam::new(
@@ -109,7 +109,7 @@ impl Default for OscillatorParams {
                 1.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" percent"),
 
             warp_release: FloatParam::new(
@@ -120,7 +120,7 @@ impl Default for OscillatorParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             tuning: FloatParam::new(
@@ -251,7 +251,7 @@ impl Default for SynthTwoParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             // Decay
@@ -263,12 +263,12 @@ impl Default for SynthTwoParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             // Sustain
             sustain: FloatParam::new("Sustain", 1.0, FloatRange::Linear { min: 0.0, max: 1.0 })
-                .with_smoother(SmoothingStyle::Logarithmic(50.0))
+                .with_smoother(SmoothingStyle::Exponential(50.0))
                 .with_unit(" percent"),
 
             // Release
@@ -280,7 +280,7 @@ impl Default for SynthTwoParams {
                     max: ENVELOPE_TIME_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             // First oscillator
@@ -295,14 +295,14 @@ impl Default for SynthTwoParams {
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             oscillator_balance_lfo_strength: FloatParam::new(
                 "Oscillator Balance LFO Strength",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 0.5 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             // Analog
             analog: FloatParam::new("Analog", 0.0, FloatRange::Linear { min: 0.0, max: 1.0 }),
@@ -316,7 +316,7 @@ impl Default for SynthTwoParams {
                     factor: FloatRange::skew_factor(-1.0),
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+            .with_smoother(SmoothingStyle::Linear(100.0)),
 
             filter_q: FloatParam::new(
                 "Filter Q",
@@ -327,7 +327,7 @@ impl Default for SynthTwoParams {
                     factor: FloatRange::skew_factor(-1.0),
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+            .with_smoother(SmoothingStyle::Linear(100.0)),
 
             filter_lfo: EnumParam::new("Filter LFO", LfoConnection::NoLfo),
 
@@ -340,7 +340,7 @@ impl Default for SynthTwoParams {
                     factor: FloatRange::skew_factor(-1.0),
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(100.0)),
+            .with_smoother(SmoothingStyle::Linear(100.0)),
 
             lfo1_period: FloatParam::new(
                 "LFO1 Period",
@@ -350,7 +350,7 @@ impl Default for SynthTwoParams {
                     max: LFO_PERIOD_MAX,
                 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0))
+            .with_smoother(SmoothingStyle::Exponential(50.0))
             .with_unit(" seconds"),
 
             lfo1_index: FloatParam::new(
@@ -358,42 +358,42 @@ impl Default for SynthTwoParams {
                 0.5,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             reverb_volume: FloatParam::new(
                 "Reverb Volume",
                 0.0,
                 FloatRange::Linear { min: 0.0, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Exponential(50.0)),
 
             reverb_delay: FloatParam::new(
                 "Reverb Delay",
                 2000.0,
                 FloatRange::Linear { min: 1600.0, max: 40000.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Exponential(50.0)),
 
             reverb_feedback: FloatParam::new(
                 "Reverb Feedback",
                 0.4,
                 FloatRange::Linear { min: 0.2, max: 0.6 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Exponential(50.0)),
 
             reverb_color: FloatParam::new(
                 "Reverb Color",
                 1000.0,
                 FloatRange::Linear { min: 300.0, max: 20000.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             reverb_q: FloatParam::new(
                 "Reverb Q",
                 0.5,
-                FloatRange::Linear { min: 0.001, max: 1.0 },
+                FloatRange::Linear { min: 0.01, max: 1.0 },
             )
-            .with_smoother(SmoothingStyle::Logarithmic(50.0)),
+            .with_smoother(SmoothingStyle::Linear(50.0)),
 
             drive_level: FloatParam::new(
                 "Drive",
