@@ -85,55 +85,71 @@ impl PresetMenu {
         Self {
             gui_context: gcx,
             presets: presets.clone(),
-            preset_names: preset_names.clone(), 
+            preset_names: preset_names.clone(),
             new_preset_name: "".to_string(),
-			selected_preset: preset_names[0].clone(),
+            // hopefully there is no preset with this name
+			selected_preset: "Default".to_string(),
         }.build(cx, |cx| {
-                VStack::new(cx, |cx| {
-                    HStack::new(cx, |cx| {
-                        Label::new(cx, "Presets");
-                        // some kind of dropdown thing here
-                        ScrollView::new(cx, 0.0, 0.0, false, true, |cx| {
-                            VStack::new(cx, |cx| {
-                                for preset_name in preset_names {
-                                    // TODO: check if this is the one that we
-                                    // have selected and change the class
-                                    Label::new(cx, &preset_name)
-                                        .on_press(move |cx| cx.emit(PresetMenuEvent::UpdatePresetSelection(preset_name.clone())));
+            HStack::new(cx, |cx| {
+                Label::new(cx, "Presets");
+                // some kind of dropdown thing here
+                //
+
+
+                Dropdown::new(cx,
+                    move |cx| {
+                        // make a label to fill the top
+                        HStack::new(cx, move |cx| {
+                            Label::new(cx, PresetMenu::selected_preset);
+                            Label::new(cx, "∨");
+                        }).class("dd-label")
+                    },
+
+                    // make the list of options
+                    move |cx| {
+                        VStack::new(cx, |cx| {
+                            // need some binding here if the stuff is updated
+                            for preset_name in preset_names.clone() {
+
+                                // keep us from running into problems with the move closure
+                                // below. maybe there is a better way
+                                let name = preset_name.clone();
+
+                                Label::new(cx, &preset_name)
+                                    .bind(PresetMenu::selected_preset, move |handle, selected| {
+                                        if preset_name == selected.get(handle.cx) {
+                                            handle.class("selected");
+                                        }
+                                    })
+                                    .on_press(move |cx| {
+                                        cx.emit(PresetMenuEvent::UpdatePresetSelection(name.clone()));
+                                        cx.emit(PopupEvent::Close);
+                                    });
                                 }
+                        }).class("dd-content");
+                    }
+                ).class("dropdown");
 
-                            });
-                        })
-                        .class("dropdown");
-
-                        Button::new(
-                            cx,
-                            |ex| ex.emit(PresetMenuEvent::LoadPreset),
-                            |cx| Label::new(cx, "Load")
-                        );
-
-
-                        Textbox::new(cx, PresetMenu::new_preset_name)
-                            .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
-                            .on_build(|cx| {
-                                cx.emit(TextEvent::StartEdit);
-                                cx.emit(TextEvent::SelectAll);
-                            })
-                            .id("preset-name-box");
-
-                        Button::new(
-                            cx,
-                            |ex| ex.emit(PresetMenuEvent::SavePreset),
-                            |cx| Label::new(cx, "Save")
-                        );
-
+                Textbox::new(cx, PresetMenu::new_preset_name)
+                    .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
+                    .on_build(|cx| {
+                        cx.emit(TextEvent::StartEdit);
+                        cx.emit(TextEvent::SelectAll);
                     })
-                    .class("row")
-                    .col_between(Pixels(30.0));
-                })
-                .class("section")
-                .id("preset-browser");
+                    .id("preset-name-box");
+
+                Button::new(
+                    cx,
+                    |ex| ex.emit(PresetMenuEvent::SavePreset),
+                    |cx| Label::new(cx, "Save")
+                );
+
             })
+            .class("row")
+            .col_between(Pixels(30.0));
+        })
+        .class("section")
+        .id("preset-browser")
     }
 }
 

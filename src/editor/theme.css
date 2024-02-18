@@ -67,7 +67,7 @@ knob .track {
 
 }
 
-.dropdown {
+.dropdown-old {
 	background-color:#7D7D7D;
 	top:5px;
 	bottom:5px;
@@ -77,7 +77,7 @@ knob .track {
 	border-color:black;
 }
 
-.dropdown label {
+.dropdown-old label {
 	border-color:black;
 	border-width:1px;;
 	width:100%;
@@ -85,8 +85,34 @@ knob .track {
   transition:background-color 0.2 0.0;
 }
 
-.dropdown label:hover {
+.dropdown-old label:hover {
 	background-color:#9D9D9D;
+}
+
+.dropdown-old .selected {
+	background-color:green;
+
+}
+
+.dropdown {
+	width:500px;
+}
+
+.dropdown .dd-label {
+	color:black;
+	width:600px;
+}
+
+.dropdown .dd-content {
+	color:white;
+}
+
+.dropdown .dd-content label {
+	background-color:#7D7D7D;
+	width:100%;
+  transition:background-color 0.2 0.0;
+	border-color:black;
+	border-width:1px;;
 }
 
 #preset-browser {
@@ -94,7 +120,7 @@ knob .track {
 }
 
 #preset-name-box {
-	width:200px;
+	width:250px;
 
 }
 
