@@ -87,8 +87,7 @@ impl PresetMenu {
             presets: presets.clone(),
             preset_names: preset_names.clone(),
             new_preset_name: "".to_string(),
-            // hopefully there is no preset with this name
-			selected_preset: "Default".to_string(),
+			selected_preset: preset_names[0].clone(),
         }.build(cx, |cx| {
             HStack::new(cx, |cx| {
                 Label::new(cx, "Presets");

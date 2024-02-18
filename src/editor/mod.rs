@@ -52,8 +52,8 @@ pub(crate) fn create(data: Data, editor_state: Arc<ViziaState>) -> Option<Box<dy
 
         ResizeHandle::new(cx);
 
-        presets(cx, gcx);
         VStack::new(cx, |cx| {
+            PresetMenu::new(cx, gcx);
             general(cx);
             oscillators(cx);
             effects(cx);
@@ -89,7 +89,7 @@ fn global_controls(cx: &mut Context) {
                 cx,
                 Data::params,
                 |params| &params.oscillator_balance_lfo_strength,
-                Some("Balance LFO"),
+                Some("Bal LFO"),
             );
  
             ParamKnob::new(cx, Data::params, |params| &params.analog, None);
@@ -143,10 +143,6 @@ fn output(cx: &mut Context) {
         })
         .class("section");
     });
-}
-
-fn presets(cx: &mut Context, gcx: Arc<dyn GuiContext>) {
-    PresetMenu::new(cx, gcx);
 }
 
 fn oscillators(cx: &mut Context) {

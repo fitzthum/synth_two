@@ -70,6 +70,7 @@ knob .track {
 .dropdown .dd-label {
 	color:black;
 	width:600px;
+	cursor: Hand;
 }
 
 .dropdown .dd-content {
@@ -98,8 +99,7 @@ knob .track {
 
 #preset-name-box {
 	width:250px;
-	left:10px;
-
+	left:20px;
 
 }
 
