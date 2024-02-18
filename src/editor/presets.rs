@@ -130,12 +130,20 @@ impl PresetMenu {
                     }
                 ).class("dropdown");
 
+
+                Button::new(
+                    cx,
+                    |ex| ex.emit(PresetMenuEvent::LoadPreset),
+                    |cx| Label::new(cx, "Load")
+                );
+
+
                 Textbox::new(cx, PresetMenu::new_preset_name)
-                    .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
                     .on_build(|cx| {
                         cx.emit(TextEvent::StartEdit);
                         cx.emit(TextEvent::SelectAll);
                     })
+                    .on_edit(|cx, text| cx.emit(PresetMenuEvent::UpdateNewPresetName(text)))
                     .id("preset-name-box");
 
                 Button::new(
