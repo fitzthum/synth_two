@@ -49,6 +49,20 @@ pub fn new<L, PsRef, Ps>(cx: &mut Context, params: L) -> Handle<'_, Self>
                         RadioButton::new(cx, params.clone().map(move |_| unsafe { (*ptr).unmodulated_plain_id().unwrap() == id }))
                             .on_select(move |_| unsafe { (*ptr).set_from_id(id); });
 
+                        let id = "sample2";
+                        RadioButton::new(cx, params.clone().map(move |_| unsafe { (*ptr).unmodulated_plain_id().unwrap() == id }))
+                            .on_select(move |_| unsafe { (*ptr).set_from_id(id); });
+
+                        let id = "wanderer1";
+                        RadioButton::new(cx, params.clone().map(move |_| unsafe { (*ptr).unmodulated_plain_id().unwrap() == id }))
+                            .on_select(move |_| unsafe { (*ptr).set_from_id(id); });
+
+                        let id = "wanderer2";
+                        RadioButton::new(cx, params.clone().map(move |_| unsafe { (*ptr).unmodulated_plain_id().unwrap() == id }))
+                            .on_select(move |_| unsafe { (*ptr).set_from_id(id); });
+
+
+
                     });
                 };
 

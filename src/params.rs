@@ -26,7 +26,12 @@ pub enum WaveBank {
     Original,
     #[id = "sample1"]
     Sample1,
-
+    #[id = "sample2"]
+    Sample2,
+    #[id = "wanderer1"]
+    Wanderer1,
+    #[id = "wanderer2"]
+    Wanderer2,
 }
 
 #[derive(Params)]

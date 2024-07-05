@@ -41,6 +41,23 @@ struct OriginalWaveFiles;
 #[include = "*.json"]
 struct Sample1WaveFiles;
 
+// A second set of sampled waves
+#[derive(RustEmbed)]
+#[folder = "waves/sampled2"]
+#[include = "*.json"]
+struct Sample2WaveFiles;
+
+// Some waves generated programmatically
+#[derive(RustEmbed)]
+#[folder = "waves/wanderer1"]
+#[include = "*.json"]
+struct Wanderer1WaveFiles;
+
+// Some more waves generated programmatically
+#[derive(RustEmbed)]
+#[folder = "waves/wanderer2"]
+#[include = "*.json"]
+struct Wanderer2WaveFiles;
 
 // Struct to store the waves
 pub struct WaveTable {
@@ -72,6 +89,28 @@ impl WaveTable {
             waves.push(serde_json::from_str(std::str::from_utf8(&f).unwrap()).unwrap());
         }
         wave_banks.insert(WaveBank::Sample1, waves);
+
+        let mut waves: Vec<Wave> = vec![];
+        for path in Sample2WaveFiles::iter() {
+            let f = Sample2WaveFiles::get(&path).unwrap().data;
+            waves.push(serde_json::from_str(std::str::from_utf8(&f).unwrap()).unwrap());
+        }
+        wave_banks.insert(WaveBank::Sample2, waves);
+
+        let mut waves: Vec<Wave> = vec![];
+        for path in Wanderer1WaveFiles::iter() {
+            let f = Wanderer1WaveFiles::get(&path).unwrap().data;
+            waves.push(serde_json::from_str(std::str::from_utf8(&f).unwrap()).unwrap());
+        }
+        wave_banks.insert(WaveBank::Wanderer1, waves);
+
+        let mut waves: Vec<Wave> = vec![];
+        for path in Wanderer2WaveFiles::iter() {
+            let f = Wanderer2WaveFiles::get(&path).unwrap().data;
+            waves.push(serde_json::from_str(std::str::from_utf8(&f).unwrap()).unwrap());
+        }
+        wave_banks.insert(WaveBank::Wanderer2, waves);
+
 
         WaveTable { wave_banks }
     }
