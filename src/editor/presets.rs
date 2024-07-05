@@ -120,6 +120,9 @@ impl PresetMenu {
                                             handle.class("selected");
                                         }
                                     })
+                                    .on_build(|cx| {
+                                        cx.emit(TextEvent::StartEdit);
+                                    })
                                     .on_press(move |cx| {
                                         cx.emit(PresetMenuEvent::UpdatePresetSelection(name.clone()));
                                         cx.emit(PopupEvent::Close);

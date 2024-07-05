@@ -2,7 +2,6 @@ use nih_plug::prelude::Editor;
 use nih_plug_vizia::vizia::prelude::*;
 use nih_plug_vizia::widgets::*;
 use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
-use nih_plug::context::gui::GuiContext;
 use std::sync::{Arc, Mutex};
 
 use crate::SynthTwoParams;
