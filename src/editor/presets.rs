@@ -5,6 +5,7 @@
 //  FIXME: edit event does not trigger on textbox
 
 use anyhow::Result;
+use dirs;
 use serde::{Serialize, Deserialize};
 use std::sync::Arc;
 
@@ -13,8 +14,17 @@ use nih_plug::context::gui::GuiContext;
 use nih_plug::wrapper::state::PluginState;
 use std::collections::HashMap;
 
-// TODO: make this OS independent
-const PRESETS_PATH: &str = "/tmp/presets.json";
+const PRESETS_FILE: &str = "presets.json";
+
+fn get_presets_path() -> std::path::PathBuf {
+    #[cfg(target_os = "linux")] {
+        let home_dir = dirs::home_dir().unwrap();
+
+        let config_dir = home_dir.join(".config/synth_two");
+        std::fs::create_dir_all(&config_dir).unwrap();
+        config_dir.join(PRESETS_FILE)
+    }
+}
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Presets {
@@ -25,8 +35,9 @@ impl Presets {
 
     // load tries to load from fs but falls back to the builtin
     fn load() -> Self {
-        let presets_string = match std::path::Path::new(PRESETS_PATH).exists() {
-            true => std::fs::read(PRESETS_PATH).unwrap(),
+        let presets_path = get_presets_path();
+        let presets_string = match std::path::Path::new(&presets_path).exists() {
+            true => std::fs::read(presets_path).unwrap(),
             false => include_str!("../../presets.json").into(),
         };
         Self {
@@ -52,7 +63,7 @@ impl Presets {
     // save always saves to the fs location
     fn save(&self) {
         let presets_string = serde_json::to_string(&self.presets).unwrap();
-        std::fs::write(PRESETS_PATH, presets_string).unwrap();
+        std::fs::write(get_presets_path(), presets_string).unwrap();
 
     }
 }
